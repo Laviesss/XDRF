@@ -1,13 +1,13 @@
 plugins {
-    id 'fabric-loom' version '1.10-SNAPSHOT'
+    id 'fabric-loom' version '1.10.5'
     id 'maven-publish'
 }
 
-version = '1.0.0'  // Modify this to your mod version
-group = 'com.laviesss'  // Your name or namespace
+version = project.mod_version
+group = project.maven_group
 
 base {
-    archivesName = 'XaeroRadarFixer'  // The name of your mod
+    archivesName = 'XaeroDisabledRadarFixer'
 }
 
 repositories {
@@ -18,16 +18,13 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.minecraft:intermediary:${project.minecraft_version}:v2"  // Use Mojang's intermediary mappings instead of Yarn
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 
 processResources {
     inputs.property "version", project.version
-
     filesMatching("fabric.mod.json") {
         expand "version": inputs.properties.version
     }
@@ -45,7 +42,6 @@ java {
 
 jar {
     inputs.property "archivesName", project.base.archivesName
-
     from("LICENSE") {
         rename { "${it}_${inputs.properties.archivesName}" }
     }
@@ -58,7 +54,6 @@ publishing {
             from components.java
         }
     }
-
     repositories {
         mavenLocal()
     }
