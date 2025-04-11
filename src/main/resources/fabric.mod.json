@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "xaeroradarfixer",
+  "version": "1.0.0",
+  "name": "XaeroRadarFixer",
+  "description": "Prevents Xaero's Minimap from being disabled by system chat messages.",
+  "authors": ["Laviesss"],
+  "contact": {},
+
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.laviesss.xaeroradarfixer.XaeroRadarFixer"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "fabric": "*",
+    "minecraft": "1.20.1"
+  }
+}
