@@ -1,22 +1,27 @@
 {
   "schemaVersion": 1,
   "id": "xaeroradarfixer",
-  "version": "1.0.0",
+  "version": "${version}",  // Will be replaced with version from gradle
   "name": "XaeroRadarFixer",
-  "description": "Prevents Xaero's Minimap from being disabled by system chat messages.",
-  "authors": ["Laviesss"],
-  "contact": {},
-
-  "license": "MIT",
-  "environment": "client",
+  "description": "A mod to fix radar features in Xaero's Minimap",
+  "authors": [
+    "Laviesss"
+  ],
+  "contact": {
+    "homepage": "https://www.example.com",  // You can add your homepage if you have one
+    "sources": "https://github.com/laviesss/xaeroradarfixer"  // You can add your GitHub or project link here
+  },
+  "license": "MIT",  // Or whatever license you choose
+  "icon": "assets/xaeroradarfixer/icon.png",  // You can add your mod icon here
+  "environment": "*",
   "entrypoints": {
     "client": [
       "com.laviesss.xaeroradarfixer.XaeroRadarFixer"
     ]
   },
+  "mixins": [],
   "depends": {
     "fabricloader": ">=0.14.0",
-    "fabric": "*",
-    "minecraft": "1.20.1"
+    "fabric-api": "*"
   }
 }
