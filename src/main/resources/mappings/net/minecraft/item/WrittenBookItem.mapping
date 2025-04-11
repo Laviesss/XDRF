@@ -1,0 +1,5 @@
+CLASS net/minecraft/class_1843 net/minecraft/item/WrittenBookItem
+	METHOD method_8054 resolve (Lnet/minecraft/class_1799;Lnet/minecraft/class_2168;Lnet/minecraft/class_1657;)Z
+		ARG 0 book
+		ARG 1 commandSource
+		ARG 2 player

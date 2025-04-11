@@ -1,0 +1,2 @@
+CLASS net/minecraft/class_2445 net/minecraft/block/PumpkinBlock
+	FIELD field_46419 CODEC Lcom/mojang/serialization/MapCodec;

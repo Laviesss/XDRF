@@ -1,0 +1,2 @@
+CLASS net/minecraft/class_920 net/minecraft/client/render/entity/LeashKnotEntityRenderer
+	FIELD field_4734 TEXTURE Lnet/minecraft/class_2960;
