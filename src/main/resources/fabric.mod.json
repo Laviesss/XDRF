@@ -3,16 +3,10 @@
   "id": "xaerodisabledradarfixer",
   "version": "${version}",
   "name": "XaeroDisabledRadarFixer",
-  "description": "A mod to fix disabled radar in Xaero Minimap",
-  "authors": [
-    "Laviesss"
-  ],
-  "contact": {
-    "homepage": "https://github.com/Laviesss",
-    "sources": "https://github.com/Laviesss/XaeroDisabledRadarFixer"
-  },
+  "description": "Prevents Xaero Minimap's system messages from disabling radar features.",
+  "authors": ["Laviesss"],
+  "contact": {},
   "license": "MIT",
-  "icon": "assets/xaerodisabledradarfixer/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
@@ -20,7 +14,7 @@
     ]
   },
   "depends": {
-    "fabric-api": "*",
-    "minecraft": "1.21.4"
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "${minecraft_version}"
   }
 }
