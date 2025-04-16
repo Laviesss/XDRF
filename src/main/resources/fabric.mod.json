@@ -10,11 +10,11 @@
   "contact": {},
   "license": "MIT",
   "environment": "*",
-  "entrypoints": {
-    "client": [
-      "com.laviesss.xaeroradarfixer.XaeroRadarFixer"
-    ]
-  },
+"entrypoints": {
+  "client": [
+    "com.laviesss.xaeroradarfixer.XaeroDisabledRadarFixerClientMod"
+  ]
+},
   "depends": {
     "fabricloader": ">=0.14.8",
     "minecraft": "1.21.4"
