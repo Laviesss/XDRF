@@ -1,2 +1,0 @@
-CLASS net/minecraft/class_3902 net/minecraft/util/Unit
-	FIELD field_51563 CODEC Lcom/mojang/serialization/Codec;

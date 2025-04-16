@@ -26,13 +26,8 @@ dependencies {
     modImplementation 'net.fabricmc.fabric-api:fabric-api:0.119.2+1.21.4'
 }
 
-loom {
-    accessWidenerPath = project.file("src/main/resources/xaeroradarfixer.accesswidener")
-}
-
 processResources {
     inputs.property "version", project.version
-
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }

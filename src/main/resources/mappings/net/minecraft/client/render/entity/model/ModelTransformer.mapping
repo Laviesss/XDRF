@@ -1,3 +1,0 @@
-CLASS net/minecraft/class_9953 net/minecraft/client/render/entity/model/ModelTransformer
-	METHOD apply (Lnet/minecraft/class_5609;)Lnet/minecraft/class_5609;
-		ARG 1 modelData
