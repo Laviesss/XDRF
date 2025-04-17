@@ -1,22 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "xaerodisabledradarfixer",
+  "id": "xaeroradarfixer",
   "version": "1.0.0",
   "name": "XaeroDisabledRadarFixer",
-  "description": "Prevents server from disabling Xaero's Minimap and Xaero's World Map.",
-  "authors": [
-    "Laviesss"
-  ],
-  "contact": {},
+  "description": "Prevents radar disabling system messages from Xaero Minimap.",
+  "authors": ["Laviesss"],
+  "contact": {
+    "homepage": "https://github.com/Laviesss",
+    "sources": "https://github.com/Laviesss/xaeroradarfixer"
+  },
   "license": "MIT",
-  "environment": "*",
-"entrypoints": {
-  "client": [
-    "com.laviesss.xaeroradarfixer.XaeroDisabledRadarFixerClientMod"
-  ]
-},
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.laviesss.xaeroradarfixer.XaeroDisabledRadarFixerClientMod"
+    ]
+  },
+  "mixins": [
+    "mixins.xaeroradarfixer.json"
+  ],
   "depends": {
-    "fabricloader": ">=0.14.8",
+    "fabricloader": ">=0.15.0",
+    "fabric": "*",
     "minecraft": "1.21.4"
   }
 }

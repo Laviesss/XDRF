@@ -11,6 +11,5 @@ public class XaeroDisabledRadarFixerClientMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         // This is where you register the mixin
-        XaeroDisabledRadarFixerMixin.register();
     }
 }

@@ -1,14 +1,15 @@
 {
   "required": true,
-  "package": "com.laviesss.xaerodisabledradarfixer.mixin",
+  "package": "com.laviesss.xaeroradarfixer.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "XaeroDisabledRadarFixerMixin"
   ],
-  "client": [
-    "XaeroDisabledRadarFixerMixin"
-  ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "accessors": [
+    "GameMessageS2CPacketAccessor"
+  ]
 }

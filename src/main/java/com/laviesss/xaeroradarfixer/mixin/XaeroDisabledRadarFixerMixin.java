@@ -1,4 +1,4 @@
-package com.laviesss.xaerodisabledradarfixer.mixin;
+package com.laviesss.xaeroradarfixer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
