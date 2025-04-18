@@ -17,13 +17,24 @@ java {
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabricmc.net/' }
+    maven { url 'https://maven.terraformersmc.com/' }
+    maven { url 'https://maven.isxander.dev/releases' }
 }
 
 dependencies {
-    minecraft 'com.mojang:minecraft:1.21.4'
-    mappings 'net.fabricmc:yarn:1.21.4+build.1:v2'
-    modImplementation 'net.fabricmc:fabric-loader:0.14.8'
-    modImplementation 'net.fabricmc.fabric-api:fabric-api:0.119.2+1.21.4'
+    // Fabric
+    minecraft "com.mojang:minecraft:1.21.4"
+    mappings "net.fabricmc:yarn:1.21.4+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.15.0"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.110.5+1.21.4"
+
+    // Mod Menu
+    modImplementation("com.terraformersmc:modmenu:9.0.0") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
+    // YACL
+    modImplementation("dev.isxander:yet-another-config-lib:3.6.6+1.21.4-fabric")
 }
 
 processResources {

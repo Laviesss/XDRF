@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "id": "xaeroradarfixer",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "name": "XaeroDisabledRadarFixer",
   "description": "Prevents radar disabling system messages from Xaero Minimap.",
   "authors": ["Laviesss"],
   "contact": {
-    "homepage": "https://github.com/Laviesss",
+    "homepage": "https://github.com/Laviesss/xaeroradarfixer",
     "sources": "https://github.com/Laviesss/xaeroradarfixer"
   },
   "license": "MIT",
@@ -14,6 +14,9 @@
   "entrypoints": {
     "client": [
       "com.laviesss.xaeroradarfixer.XaeroDisabledRadarFixerClientMod"
+    ],
+    "modmenu": [
+      "com.laviesss.xaeroradarfixer.XaeroRadarFixerModMenu"
     ]
   },
   "mixins": [
@@ -22,6 +25,8 @@
   "depends": {
     "fabricloader": ">=0.15.0",
     "fabric": "*",
-    "minecraft": "1.21.4"
+    "minecraft": "1.21.4",
+    "modmenu": ">=9.0.0",
+    "yet_another_config_lib_v3": ">=3.1.1"
   }
 }
