@@ -11,9 +11,9 @@ Some Minecraft servers send hidden or obfuscated chat messages that silently dis
 - 💬 Optional chat messages to notify you when blocking occurs
   
 - 🔔 Optional toast notifications when the mod activates
-  
+
 - 🛠️ Fully configurable via Mod Menu + YACL (YetAnotherConfigLib)
-- 
+  
 - 💾 Saves settings to a persistent .txt config file in your Minecraft config folder
 
 **⚙️ Compatibility**
