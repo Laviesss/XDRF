@@ -12,7 +12,7 @@
         "sources":  "https://github.com/Laviesss/XaeroDisabledRadarFixer"
     },
 
-    "license": "MIT",
+    "license": "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
     "environment": "client",
 
     "entrypoints": {
