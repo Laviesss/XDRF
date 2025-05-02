@@ -1,11 +1,12 @@
+// build.gradle (root of your project)
 plugins {
-    id 'fabric-loom' version '1.9.2'
+    id 'fabric-loom' version '1.10.1'
     id 'maven-publish'
     id 'java'
 }
 
-group = 'com.laviesss.xaeroradarfixer'
-version = '1.0.0'
+group = 'com.laviesss.xaerodisabledradarfixer'
+version = '2.0.0+1.21-universal'
 
 java {
     toolchain {
@@ -22,19 +23,18 @@ repositories {
 }
 
 dependencies {
-    // Fabric
-    minecraft "com.mojang:minecraft:1.21.4"
-    mappings "net.fabricmc:yarn:1.21.4+build.1:v2"
+    // === Core dependencies ===
+    minecraft "com.mojang:minecraft:1.21"
+    mappings  "net.fabricmc:yarn:1.21+build.1:v2"
     modImplementation "net.fabricmc:fabric-loader:0.15.0"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.110.5+1.21.4"
 
+    // === Optional / compile-only ===
+    // Fabric API (lowest 1.21.x build that covers the whole range)
+    modCompileOnly "net.fabricmc.fabric-api:fabric-api:0.113.0+1.21.4"
     // Mod Menu
-    modImplementation("com.terraformersmc:modmenu:9.0.0") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-
-    // YACL
-    modImplementation("dev.isxander:yet-another-config-lib:3.6.6+1.21.4-fabric")
+    modCompileOnly "com.terraformersmc:modmenu:11.0.0"
+    // Yet Another Config Lib (YACL)
+    modCompileOnly "dev.isxander:yet-another-config-lib:3.5.0+1.21-fabric"
 }
 
 processResources {
@@ -45,8 +45,8 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
-    it.options.release = 21
+    options.encoding = "UTF-8"
+    options.release.set(21)
 }
 
 publishing {

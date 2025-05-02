@@ -1,32 +1,35 @@
 {
-  "schemaVersion": 1,
-  "id": "xaeroradarfixer",
-  "version": "2.0.0",
-  "name": "XaeroDisabledRadarFixer",
-  "description": "Prevents radar disabling system messages from Xaero Minimap.",
-  "authors": ["Laviesss"],
-  "contact": {
-    "homepage": "https://github.com/Laviesss/xaeroradarfixer",
-    "sources": "https://github.com/Laviesss/xaeroradarfixer"
-  },
-  "license": "MIT",
-  "environment": "client",
-  "entrypoints": {
-    "client": [
-      "com.laviesss.xaeroradarfixer.XaeroDisabledRadarFixerClientMod"
-    ],
-    "modmenu": [
-      "com.laviesss.xaeroradarfixer.XaeroRadarFixerModMenu"
-    ]
-  },
-  "mixins": [
-    "mixins.xaeroradarfixer.json"
-  ],
-  "depends": {
-    "fabricloader": ">=0.15.0",
-    "fabric": "*",
-    "minecraft": "1.21.4",
-    "modmenu": ">=9.0.0",
-    "yet_another_config_lib_v3": ">=3.1.1"
-  }
+    "schemaVersion": 1,
+    "id": "xaerodisabledradarfixer",
+    "version": "${version}",
+
+    "name": "Xaero Disabled Radar Fixer",
+    "description": "Blocks server-side attempts to silently disable the radar in Xaero's Minimap and World Map.",
+    "authors": ["Laviesss"],
+
+    "contact": {
+        "homepage": "https://github.com/Laviesss/XaeroDisabledRadarFixer",
+        "sources":  "https://github.com/Laviesss/XaeroDisabledRadarFixer"
+    },
+
+    "license": "MIT",
+    "environment": "client",
+
+    "entrypoints": {
+        "client":  [ "com.laviesss.xaerodisabledradarfixer.XaeroDisabledRadarFixerClientMod" ],
+        "modmenu": [ "com.laviesss.xaerodisabledradarfixer.XaeroRadarFixerModMenu" ]
+    },
+
+    "mixins": [ "mixins.xaerodisabledradarfixer.json" ],
+
+    "depends": {
+        "fabricloader": ">=0.15.0",
+        "minecraft":   "1.21.x"
+    },
+
+    "suggests": {
+        "fabric_api":             "*",
+        "modmenu":                "*",
+        "yet_another_config_lib": "*"
+    }
 }

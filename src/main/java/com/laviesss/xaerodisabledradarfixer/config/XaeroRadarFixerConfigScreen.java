@@ -1,4 +1,4 @@
-package com.laviesss.xaeroradarfixer.config;
+package com.laviesss.xaerodisabledradarfixer.config;
 
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
@@ -16,7 +16,7 @@ public class XaeroRadarFixerConfigScreen {
                         .name(Text.literal("Settings"))
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Enable Xaero Radar Fixer"))
-                                .description(OptionDescription.of(Text.literal("Toggle the radar message blocker")))
+                                .description(OptionDescription.of(Text.literal("Toggle the radar disabling message blocker (REJOIN FOR THIS TO TAKE EFFECT)")))
                                 .binding(
                                         true,
                                         () -> XaeroRadarFixerConfig.enabled,

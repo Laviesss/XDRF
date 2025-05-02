@@ -1,6 +1,6 @@
-package com.laviesss.xaeroradarfixer;
+package com.laviesss.xaerodisabledradarfixer;
 
-import com.laviesss.xaeroradarfixer.config.XaeroRadarFixerConfig;
+import com.laviesss.xaerodisabledradarfixer.config.XaeroRadarFixerConfig;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import net.fabricmc.api.ClientModInitializer;
 
