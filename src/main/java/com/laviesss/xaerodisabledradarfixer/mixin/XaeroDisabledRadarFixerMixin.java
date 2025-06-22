@@ -19,26 +19,28 @@ public class XaeroDisabledRadarFixerMixin {
 
     @Inject(method = "onGameMessage", at = @At("HEAD"), cancellable = true)
     private void onGameMessage(GameMessageS2CPacket packet, CallbackInfo ci) {
-        // Do nothing if the mod is disabled
         if (!XaeroRadarFixerConfig.enabled) {
             return;
         }
 
         String content = packet.content().getString();
 
+        // Detection logic — excluding §r§e§s§e§t§x§a§e§r§o
         if (content.contains("§ƒ§ə§i§r§×§a§e§Ã§o") ||
                 content.contains("§x§a§e§Ã§o§w§m§§§§§§r§i§§ƒ§ä§i§r") ||
                 content.contains("§ƒ§ə§i§r§×§a§e§Ã§o §x§a§e§Ã§o§w§m§§§§§§r§i§§ƒ§ä§i§r") ||
-                content.contains("§f§a§i§r§x§a§e§r§o §x§a§e§r§o§w§m§n§e§t§h§e§r§i§s§f§a§i§r")) {
+                content.contains("§f§a§i§r§x§a§e§r§o §x§a§e§r§o§w§m§n§e§t§h§e§r§i§s§f§a§i§r") ||
+                content.contains("§f§a§i§r§x§a§e§r§o") ||
+                content.contains("§x§a§e§r§o§w§m§n§e§t§h§e§r§i§s§f§a§i§r") ||
+                content.contains("§n§o§m§i§n§i§m§a§p")) {
 
             blockCount++;
 
             MinecraftClient client = MinecraftClient.getInstance();
 
-            // Delay the message and toast by 3 seconds (async thread + main thread call)
             new Thread(() -> {
                 try {
-                    Thread.sleep(3000); // 3 seconds
+                    Thread.sleep(3000);
                 } catch (InterruptedException ignored) {}
 
                 client.execute(() -> {
@@ -62,7 +64,7 @@ public class XaeroDisabledRadarFixerMixin {
                 });
             }).start();
 
-            ci.cancel(); // Block the radar-disabling message itself immediately
+            ci.cancel();
         }
     }
 }

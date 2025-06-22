@@ -15,7 +15,7 @@ public class XaeroRadarFixerConfigScreen {
                 .category(ConfigCategory.createBuilder()
                         .name(Text.literal("Settings"))
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Enable Xaero Radar Fixer"))
+                                .name(Text.literal("Enable/Disable Xaero Radar Fixer"))
                                 .description(OptionDescription.of(Text.literal("Toggle the radar disabling message blocker (REJOIN FOR THIS TO TAKE EFFECT)")))
                                 .binding(
                                         true,
