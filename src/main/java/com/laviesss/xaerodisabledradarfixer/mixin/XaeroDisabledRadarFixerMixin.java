@@ -26,12 +26,8 @@ public class XaeroDisabledRadarFixerMixin {
         String content = packet.content().getString();
 
         // Detection logic — excluding §r§e§s§e§t§x§a§e§r§o
-        if (content.contains("§ƒ§ə§i§r§×§a§e§Ã§o") ||
-                content.contains("§x§a§e§Ã§o§w§m§§§§§§r§i§§ƒ§ä§i§r") ||
-                content.contains("§ƒ§ə§i§r§×§a§e§Ã§o §x§a§e§Ã§o§w§m§§§§§§r§i§§ƒ§ä§i§r") ||
-                content.contains("§f§a§i§r§x§a§e§r§o §x§a§e§r§o§w§m§n§e§t§h§e§r§i§s§f§a§i§r") ||
-                content.contains("§f§a§i§r§x§a§e§r§o") ||
-                content.contains("§x§a§e§r§o§w§m§n§e§t§h§e§r§i§s§f§a§i§r") ||
+        if (content.contains("§f§a§i§r§x§a§e§r§o") ||
+                content.contains("§x§a§e§r§o§w§m§n§e§t§h§e§r§i§s§f§a§i§") ||
                 content.contains("§n§o§m§i§n§i§m§a§p")) {
 
             blockCount++;
