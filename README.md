@@ -7,29 +7,41 @@ Some Minecraft servers send hidden or obfuscated chat messages designed to silen
 
 ### 🔧 Features
 
-- ✅ Prevents radar-disabling messages from affecting your client  
-- 💬 Optional in-game chat messages when a block occurs  
-- 🔔 Optional toast notifications for blocked messages  
-- 🛠️ Fully configurable via **Mod Menu + YACL**  
-- 💾 Config is saved as a persistent `.txt` file in the Minecraft config folder  
-- 🔄 Toggle mod functionality on or off (requires rejoin to apply)
+- ✅ **Blocks radar-disabling chat codes** before they affect Xaero's mods  
+- 💬 Optional **in-game chat notifications** when a radar-blocking message is intercepted  
+- 🔔 Optional **toast pop-ups** as visual alerts  
+- 🧠 **Remembers the last blocked message** and lets you resend it with a button press to reapply previously blocked radar state in case mods ask to see minimap or screenshot or screen recording/screen sharing
+- ♻️ **Reset radar mode** manually using a built-in reset button to manually reset radar state to its unblocked state
+- 🛠️ Fully configurable via **Mod Menu + YACL (Yet Another Config Lib)**  
+- 💾 Config is **saved persistently** and respects your changes between launches  
+- 📂 Config stored in a `.json` file under the `config/` folder  
+- 🔄 Toggle mod functionality on/off from the config menu (rejoining world/server required)
 
 ---
 
 ### ⚙️ Compatibility
 
-- ✔️ Works with **Xaero’s Minimap** and **Xaero’s World Map**  
-- ✔️ Supports **Minecraft 1.21 – 1.21.5**  
-- ✔️ Fabric Loader only  
-- ❌ Client-side only – not required on servers  
+- ✔️ Compatible with **Xaero’s Minimap** and **Xaero’s World Map** and **XaeroPlus** 
+- ✔️ Supports **Minecraft 1.21-1.21.x**
+- ✔️ Requires **Fabric Loader**  
+- ❌ Client-side only – **not required on servers**  
+
+---
+
+### 🧪 Debug + Control
+
+- 🧾 Logs when messages are blocked or self-sent via config actions  
+- 🧩 Can be controlled through UI buttons in Mod Menu:
+  - 🔁 **"Resend Last Blocked Code"** button to reapply previously blocked radar state in case mods ask to see minimap or screenshot or screen recording/screen sharing
+  - 🧹 **"Send Reset Code"** to manually reset radar state to its unblocked state
 
 ---
 
 ### 📝 Notes
 
-- 🖥️ This mod is **client-side only** and does not affect server code.  
-- ⚠️ **May violate server rules** on some servers that prohibit radar functionality. Use at your own risk.  
-- 🔁 Configurable via Mod Menu UI – settings are stored between launches.
+- 🖥️ This mod is **client-side only** and does not interfere with server operations  
+- ⚠️ **Will violate server rules** that prohibit radar use — use with discretion  
+- 🧷 Lightweight and doesn't interfere with gameplay or performance
 
 ---
 
@@ -37,12 +49,11 @@ Some Minecraft servers send hidden or obfuscated chat messages designed to silen
 
 This mod was developed primarily using OpenAI’s ChatGPT. While it functions as intended, I am not a professional developer/coder or even developer/coder at all, so please expect occasional bugs or limitations. I may not be able to fix all issues quickly—or at all.
 
-
 ---
 
 ### 📜 License
 
-Licensed under **[Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)](https://creativecommons.org/licenses/by-nc-nd/4.0/)**.  
-- ✅ You **may include** this mod in modpacks  
-- ❌ You **may not modify, reupload, or claim ownership** of this mod  
-- 📌 **Credit is required**
+Licensed under the **[Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)](https://creativecommons.org/licenses/by-nc-nd/4.0/)**.  
+- ✅ **Modpacks** are allowed  
+- ❌ **Modifications, forks, reuploads, or commercial use** are not  
+- 📌 **Proper credit is required**
