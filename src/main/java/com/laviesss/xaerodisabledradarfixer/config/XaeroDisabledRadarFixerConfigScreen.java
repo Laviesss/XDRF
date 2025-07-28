@@ -12,6 +12,8 @@ import net.minecraft.text.Text;
 
 public class XaeroDisabledRadarFixerConfigScreen {
     public static Screen create(Screen parent) {
+        XaeroDisabledRadarFixerConfig config = XaeroDisabledRadarFixerConfig.get();
+
         return YetAnotherConfigLib.createBuilder()
                 .title(Text.literal("Xaero Disabled Radar Fixer"))
                 .category(ConfigCategory.createBuilder()
@@ -21,11 +23,9 @@ public class XaeroDisabledRadarFixerConfigScreen {
                                 .name(Text.literal("Enable Radar Fixer"))
                                 .description(OptionDescription.of(Text.literal("Toggle blocking of server radar‑disable messages.")))
                                 .binding(
-                                        true,
-                                        () -> XaeroDisabledRadarFixerConfig.enabled,
-                                        val -> {
-                                            XaeroDisabledRadarFixerConfig.setEnabled(val);
-                                        }
+                                        config.isEnabled(),
+                                        config::isEnabled,
+                                        config::setEnabled
                                 )
                                 .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
                                 .build())
@@ -34,11 +34,9 @@ public class XaeroDisabledRadarFixerConfigScreen {
                                 .name(Text.literal("Show Chat Message"))
                                 .description(OptionDescription.of(Text.literal("Notify via chat when a radar message is blocked.")))
                                 .binding(
-                                        true,
-                                        () -> XaeroDisabledRadarFixerConfig.showChatMessage,
-                                        val -> {
-                                            XaeroDisabledRadarFixerConfig.setShowChatMessage(val);
-                                        }
+                                        config.isShowChatMessage(),
+                                        config::isShowChatMessage,
+                                        config::setShowChatMessage
                                 )
                                 .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
                                 .build())
@@ -47,11 +45,9 @@ public class XaeroDisabledRadarFixerConfigScreen {
                                 .name(Text.literal("Show Toast Notifications"))
                                 .description(OptionDescription.of(Text.literal("Notify via toast when a radar message is blocked.")))
                                 .binding(
-                                        true,
-                                        () -> XaeroDisabledRadarFixerConfig.showToast,
-                                        val -> {
-                                            XaeroDisabledRadarFixerConfig.setShowToast(val);
-                                        }
+                                        config.isShowToast(),
+                                        config::isShowToast,
+                                        config::setShowToast
                                 )
                                 .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
                                 .build())
@@ -69,7 +65,6 @@ public class XaeroDisabledRadarFixerConfigScreen {
                                 .build())
 
                         .build())
-                // No need to call .save() here since we save on every toggle
                 .build()
                 .generateScreen(parent);
     }

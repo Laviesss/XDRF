@@ -9,54 +9,67 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class XaeroDisabledRadarFixerConfig {
-    public static boolean enabled = true;
-    public static boolean showChatMessage = true;
-    public static boolean showToast = true;
-
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final File CONFIG_FILE = new File("config/xaero_disabled_radar_fixer.json");
+    private static XaeroDisabledRadarFixerConfig INSTANCE;
 
-    public static void save() {
-        try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
-            new GsonBuilder().setPrettyPrinting().create().toJson(new XaeroDisabledRadarFixerConfig(), writer);
-        } catch (IOException e) {
-            System.err.println("Failed to save Xaero Disabled Radar Fixer config:");
-            e.printStackTrace();
+    private boolean enabled = true;
+    private boolean showChatMessage = true;
+    private boolean showToast = true;
+
+    public static XaeroDisabledRadarFixerConfig get() {
+        if (INSTANCE == null) {
+            load();
         }
+        return INSTANCE;
     }
 
     public static void load() {
-        if (!CONFIG_FILE.exists()) {
-            save(); // Create config with default values
-            return;
+        if (CONFIG_FILE.exists()) {
+            try (FileReader reader = new FileReader(CONFIG_FILE)) {
+                INSTANCE = GSON.fromJson(reader, XaeroDisabledRadarFixerConfig.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                INSTANCE = new XaeroDisabledRadarFixerConfig();
+            }
+        } else {
+            INSTANCE = new XaeroDisabledRadarFixerConfig();
+            save();
         }
-        try (FileReader reader = new FileReader(CONFIG_FILE)) {
-            XaeroDisabledRadarFixerConfig loaded = new Gson().fromJson(reader, XaeroDisabledRadarFixerConfig.class);
-            enabled = loaded.enabled;
-            showChatMessage = loaded.showChatMessage;
-            showToast = loaded.showToast;
+    }
+
+    public static void save() {
+        try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
+            GSON.toJson(INSTANCE, writer);
         } catch (IOException e) {
-            System.err.println("Failed to load Xaero Disabled Radar Fixer config:");
             e.printStackTrace();
         }
     }
 
-    public static File getConfigFile() {
-        return CONFIG_FILE;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    // Optional utility methods for setting + auto-saving
-    public static void setEnabled(boolean val) {
-        enabled = val;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
         save();
     }
 
-    public static void setShowChatMessage(boolean val) {
-        showChatMessage = val;
+    public boolean isShowChatMessage() {
+        return showChatMessage;
+    }
+
+    public void setShowChatMessage(boolean showChatMessage) {
+        this.showChatMessage = showChatMessage;
         save();
     }
 
-    public static void setShowToast(boolean val) {
-        showToast = val;
+    public boolean isShowToast() {
+        return showToast;
+    }
+
+    public void setShowToast(boolean showToast) {
+        this.showToast = showToast;
         save();
     }
 }
