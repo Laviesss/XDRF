@@ -9,27 +9,23 @@
 
     "contact": {
         "homepage": "https://github.com/Laviesss/XDRF",
-        "sources":  "https://github.com/Laviesss/XDRF"
+        "sources": "https://github.com/Laviesss/XDRF"
     },
 
     "license": "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
     "environment": "client",
 
     "entrypoints": {
-        "client":  [ "com.laviesss.xaerodisabledradarfixer.XaeroDisabledRadarFixerClientMod" ],
-        "modmenu": [ "com.laviesss.xaerodisabledradarfixer.XaeroRadarFixerModMenu" ]
+        "client": ["com.laviesss.xaerodisabledradarfixer.XaeroDisabledRadarFixerClientMod"],
+        "modmenu": ["com.laviesss.xaerodisabledradarfixer.XaeroDisabledRadarFixerModMenu"]
     },
 
-    "mixins": [ "mixins.xaerodisabledradarfixer.json" ],
+    "mixins": ["mixins.xaerodisabledradarfixer.json"],
 
     "depends": {
         "fabricloader": ">=0.15.0",
-        "minecraft":   "1.21.x"
-    },
-
-    "suggests": {
-        "fabric_api":             "*",
-        "modmenu":                "*",
-        "yet_another_config_lib": "*"
+        "minecraft": "1.21.x",
+        "modmenu": "*",
+        "yet_another_config_lib_v3": ">=3.6.2"
     }
 }

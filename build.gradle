@@ -1,4 +1,3 @@
-// build.gradle (root of your project)
 plugins {
     id 'fabric-loom' version '1.10.1'
     id 'maven-publish'
@@ -23,18 +22,18 @@ repositories {
 }
 
 dependencies {
-    // === Core dependencies ===
     minecraft "com.mojang:minecraft:1.21"
     mappings  "net.fabricmc:yarn:1.21+build.1:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.15.0"
+    modImplementation "net.fabricmc:fabric-loader:0.16.14"
 
-    // === Optional / compile-only ===
-    // Fabric API (lowest 1.21.x build that covers the whole range)
-    modCompileOnly "net.fabricmc.fabric-api:fabric-api:0.113.0+1.21.4"
-    // Mod Menu
-    modCompileOnly "com.terraformersmc:modmenu:11.0.0"
-    // Yet Another Config Lib (YACL)
-    modCompileOnly "dev.isxander:yet-another-config-lib:3.5.0+1.21-fabric"
+    // Fabric API (if needed it will be used at compile time and runtime; otherwise you can remove this)
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.100.1+1.21"
+
+    // YACL (needed at compile time and runtime)
+    modImplementation "dev.isxander:yet-another-config-lib:3.6.2+1.21-fabric"
+
+    // ModMenu (needed at compile time if you implement ModMenuApi)
+    modImplementation "com.terraformersmc:modmenu:11.0.0"
 }
 
 processResources {
