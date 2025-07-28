@@ -1,5 +1,5 @@
 # Xaero Disabled Radar Fixer  
-## 🛡️ Blocks server-side attempts to silently disable the radar in Xaero's Minimap and World Map
+## 🛡️ Blocks server-side attempts to silently disable the radar in Xaero's Minimap/World Map
 
 Some Minecraft servers send hidden or obfuscated chat messages designed to silently disable radar functionality in **Xaero’s Minimap** and **Xaero’s World Map**. This lightweight **client-side mod** intercepts and blocks those messages, giving you full control over your radar—regardless of server intent.
 
