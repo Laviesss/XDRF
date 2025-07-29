@@ -54,13 +54,13 @@ public class XaeroDisabledRadarFixerConfigScreen {
 
                         .option(ButtonOption.createBuilder()
                                 .name(Text.literal("Resend Last Blocked Code"))
-                                .description(OptionDescription.of(Text.literal("Re-send the last blocked radar-disabling code.")))
+                                .description(OptionDescription.of(Text.literal("Re-send the last blocked radar-disabling code so that if mods ask to see minimap if they suspect cheating or other stuff (e.g. screenshots or screen sharing).")))
                                 .action((screen, button) -> XaeroDisabledRadarFixerService.resendLastBlockedCode())
                                 .build())
 
                         .option(ButtonOption.createBuilder()
                                 .name(Text.literal("Send Reset Code"))
-                                .description(OptionDescription.of(Text.literal("Send the original minimap reset message.")))
+                                .description(OptionDescription.of(Text.literal("Sends the reset message code built into Xaero's Minimap/World Map mods to allow radar functionality like it was never blocked.")))
                                 .action((screen, button) -> XaeroDisabledRadarFixerService.sendResetCode())
                                 .build())
 
