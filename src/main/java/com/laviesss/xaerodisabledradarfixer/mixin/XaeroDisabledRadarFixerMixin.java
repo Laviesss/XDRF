@@ -24,19 +24,18 @@ public class XaeroDisabledRadarFixerMixin {
     private void onGameMessage(GameMessageS2CPacket packet, CallbackInfo ci) {
         XaeroDisabledRadarFixerConfig cfg = XaeroDisabledRadarFixerConfig.get();
         if (!cfg.isEnabled()) return;
+        if (XaeroDisabledRadarFixerService.isBlockingSuppressed()) return;
 
         String content = packet.content().getString();
-        boolean matches = content.contains("§f§a§i§r§x§a§e§r§o") ||
-                content.contains("§x§a§e§r§o§w§m§n§e§t§h§e§r§i§s§f§a§i§r") ||
-                content.contains("§n§o§m§i§n§i§m§a§p");
 
-        if (matches) {
-            if (content.equals(XaeroDisabledRadarFixerService.getLastSentCode())) {
-                LOGGER.debug("[XDRF] Ignored our own radar message.");
-                return;
-            }
+        // These are the ONLY patterns that should be blocked
+        boolean shouldBlock = content.equals("§f§a§i§r§x§a§e§r§o")
+                || content.equals("§x§a§e§r§o§w§m§n§e§t§h§e§r§i§s§f§a§i§r")
+                || content.equals("§n§o§m§i§n§i§m§a§p");
 
+        if (shouldBlock) {
             XaeroDisabledRadarFixerService.setLastSentCode(content);
+
             LOGGER.info("[XDRF] Intercepted and blocked radar-disable message: {}", content);
 
             MinecraftClient client = MinecraftClient.getInstance();
