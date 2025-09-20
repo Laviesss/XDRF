@@ -10,8 +10,7 @@ Some Minecraft servers send hidden or obfuscated chat messages designed to silen
 - ✅ **Blocks radar-disabling chat codes** before they affect Xaero's mods  
 - 💬 Optional **in-game chat notifications** when a radar-blocking message is intercepted  
 - 🔔 Optional **toast pop-ups** as visual alerts  
-- 🧠 **Remembers the last radar blocker** and lets you resend it if mods ask for minimap proof (e.g. screenshots or screen sharing)
-- ♻️ **Reset radar mode** manually using a built-in reset button to manually reset radar state to its unblocked state
+- ♻️ **Reset radar mode** manually using a built-in reset button to manually reset radar state to its unblocked state if mods ask to see minimap or etc (e.g. screenshots or screen sharing)
 - 🛠️ Fully configurable via **Mod Menu + YACL (Yet Another Config Lib)**  
 - 💾 Config is **saved persistently** and respects your changes between launches  
 - 📂 Config stored in a `.json` file under the `config/` folder  
@@ -60,3 +59,4 @@ Licensed under the **[Creative Commons Attribution-NonCommercial-NoDerivatives 4
 - ✅ **Modpacks** are allowed  
 - ❌ **Modifications, forks, reuploads, or commercial use** are not  
 - 📌 **Proper credit is required**
+
