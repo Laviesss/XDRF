@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class XaeroDisabledRadarFixerConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -16,6 +18,14 @@ public class XaeroDisabledRadarFixerConfig {
     private boolean enabled = true;
     private boolean showChatMessage = true;
     private boolean showToast = true;
+    private boolean showBlockedMessage = false;
+    private List<String> blockingPatterns = new ArrayList<>();
+
+    public XaeroDisabledRadarFixerConfig() {
+        blockingPatterns.add("§f§a§i§r§x§a§e§r§o");
+        blockingPatterns.add("§x§a§e§r§o§w§m§n§e§t§h§e§r§i§s§f§a§i§r");
+        blockingPatterns.add("§n§o§m§i§n§i§m§a§p");
+    }
 
     public static XaeroDisabledRadarFixerConfig get() {
         if (INSTANCE == null) {
@@ -70,6 +80,24 @@ public class XaeroDisabledRadarFixerConfig {
 
     public void setShowToast(boolean showToast) {
         this.showToast = showToast;
+        save();
+    }
+
+    public List<String> getBlockingPatterns() {
+        return blockingPatterns;
+    }
+
+    public void setBlockingPatterns(List<String> blockingPatterns) {
+        this.blockingPatterns = blockingPatterns;
+        save();
+    }
+
+    public boolean isShowBlockedMessage() {
+        return showBlockedMessage;
+    }
+
+    public void setShowBlockedMessage(boolean showBlockedMessage) {
+        this.showBlockedMessage = showBlockedMessage;
         save();
     }
 }
