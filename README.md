@@ -1,61 +1,53 @@
 # Xaero Disabled Radar Fixer  
-## 🛡️ Blocks server-side attempts to silently disable the radar in Xaero's Minimap/World Map
+## 🛡️ Blocks server-side attempts to silently disable the radar in Xaero's Minimap & World Map
 
-Some Minecraft servers send hidden or obfuscated chat messages designed to silently disable radar functionality in **Xaero’s Minimap** and **Xaero’s World Map**. This lightweight **client-side mod** intercepts and blocks those messages, giving you full control over your radar—regardless of server intent.
+Some Minecraft servers send hidden/obfuscated chat messages or enforce plugin-channel rules to silently disable radar on **Xaero's Minimap** and **Xaero's World Map**. This lightweight **client-side mod** intercepts both, giving you full control over your radar regardless of server intent.
 
 ---
 
 ### 🔧 Features
 
-- ✅ **Blocks radar-disabling chat codes** before they affect Xaero's mods  
-- 💬 Optional **in-game chat notifications** when a radar-blocking message is intercepted  
-- 🔔 Optional **toast pop-ups** as visual alerts  
-- ♻️ **Reset radar mode** manually using a built-in reset button to manually reset radar state to its unblocked state if mods ask to see minimap or etc (e.g. screenshots or screen sharing)
-- 🛠️ Fully configurable via **Mod Menu + YACL (Yet Another Config Lib)**  
-- 💾 Config is **saved persistently** and respects your changes between launches  
-- 📂 Config stored in a `.json` file under the `config/` folder  
-- 🔄 Toggle mod functionality on/off from the config menu (rejoining world/server required)
+- ✅ **Blocks radar-disabling chat codes** before they reach Xaero's mods
+- ✅ **Blocks server-enforced minimap rules packets** (radar/cave-mode disable via plugin channel)
+- 🔑 **Configurable keybinding** (default <kbd>N</kbd>) to toggle blocking on/off
+- 💬 Optional **in-game chat notifications** when something is blocked
+- 🔔 Optional **toast pop-ups** as visual alerts
+- 🔊 Optional **sound effect** on block (villager celebrate)
+- ♻️ **Resend last blocked code** — reapply previously blocked radar state if moderators ask for minimap proof
+- 🧹 **Send reset code** — manually restore radar to its unblocked state
+- 🛠️ Fully configurable via **Mod Menu + YACL (Yet Another Config Lib)**
 
 ---
 
 ### ⚙️ Compatibility
 
-- ✔️ Compatible with **Xaero’s Minimap** and **Xaero’s World Map** and **XaeroPlus** 
-- ✔️ Supports **Minecraft 1.21-1.21.x**
-- ✔️ Requires **Fabric Loader**  
-- ❌ Client-side only – **not required on servers**  
-
----
-
-### 🧪 Debug + Control
-
-- 🧾 Logs when messages are blocked or self-sent via config actions  
-- 🧩 Can be controlled through UI buttons in Mod Menu:
-  - 🔁 **"Resend Last Blocked Code"** button to reapply previously blocked radar state in case mods ask to see minimap or screenshot or screen recording/screen sharing
-  - 🧹 **"Send Reset Code"** to manually reset radar state to its unblocked state
+- ✔️ **Xaero's Minimap**, **Xaero's World Map**, and **XaeroPlus**
+- ✔️ Minecraft **1.21 – 1.21.x**
+- ✔️ Requires **Fabric Loader** + **Fabric API**
+- ❌ Client-side only — not needed on servers
 
 ---
 
 ### 📝 Notes
 
-- 🖥️ This mod is **client-side only** and does not interfere with server operations  
-- ⚠️ **Will violate server rules** that prohibit radar use — use with discretion  
-- 🧷 Lightweight and doesn't interfere with gameplay or performance
+- 🖥️ **Client-side only** — does not interfere with server operations
+- ⚠️ **Will violate server rules** that prohibit radar use — use with discretion
+- 🧷 Lightweight — no gameplay or performance impact
+- 💾 Config is saved persistently to `config/xaero_disabled_radar_fixer.json`
 
 ---
 
 ### ⚠️ Disclaimer
 
-This mod was developed primarily using OpenAI’s ChatGPT. While it functions as intended, I am not a professional developer/coder or even developer/coder at all, so please expect occasional bugs or limitations. I may not be able to fix all issues quickly—or at all. 
+This mod was developed primarily using AI assistance. While it functions as intended, I am not a professional developer. Expect occasional bugs or limitations — I may not be able to fix all issues quickly or at all.
 
-By using this mod, you acknowledge that you are solely responsible for any consequences that may arise, including but not limited to warnings, mutes, kicks, or bans from multiplayer servers. I, the developer, assume no liability for actions taken against your account due to the use of this mod. Use at your own risk, especially on servers with rules against minimap or radar modifications.
-
+By using this mod, you acknowledge that you are solely responsible for any consequences, including but not limited to warnings, mutes, kicks, or bans from multiplayer servers. Use at your own risk, especially on servers with rules against minimap or radar modifications.
 
 ---
 
 ### 📜 License
 
-Licensed under the **[Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)](https://creativecommons.org/licenses/by-nc-nd/4.0/)**.  
+Licensed under **[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)**.  
 - ✅ **Modpacks** are allowed  
 - ❌ **Modifications, forks, reuploads, or commercial use** are not  
 - 📌 **Proper credit is required**
