@@ -16,6 +16,11 @@ public class XaeroDisabledRadarFixerConfig {
     private boolean enabled = true;
     private boolean showChatMessage = true;
     private boolean showToast = true;
+    private boolean blockPacketRules = true;
+    private boolean playSound = true;
+    private boolean enableKeybind = true;
+    private int blockedCount = 0;
+    private int packetBlockedCount = 0;
 
     public static XaeroDisabledRadarFixerConfig get() {
         if (INSTANCE == null) {
@@ -70,6 +75,46 @@ public class XaeroDisabledRadarFixerConfig {
 
     public void setShowToast(boolean showToast) {
         this.showToast = showToast;
+        save();
+    }
+
+    public boolean isBlockPacketRules() {
+        return blockPacketRules;
+    }
+
+    public void setBlockPacketRules(boolean blockPacketRules) {
+        this.blockPacketRules = blockPacketRules;
+        save();
+    }
+
+    public boolean isPlaySound() {
+        return playSound;
+    }
+
+    public void setPlaySound(boolean playSound) {
+        this.playSound = playSound;
+        save();
+    }
+
+    public boolean isEnableKeybind() {
+        return enableKeybind;
+    }
+
+    public void setEnableKeybind(boolean enableKeybind) {
+        this.enableKeybind = enableKeybind;
+        save();
+    }
+
+    public int getBlockedCount() {
+        return blockedCount;
+    }
+
+    public int getPacketBlockedCount() {
+        return packetBlockedCount;
+    }
+
+    public void incrementPacketBlockedCount() {
+        this.packetBlockedCount++;
         save();
     }
 }

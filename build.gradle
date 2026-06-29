@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.10.1'
+    id 'fabric-loom' version '1.17.11'
     id 'maven-publish'
     id 'java'
 }
@@ -9,7 +9,7 @@ version = '2.0.0+1.21-universal'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
     withSourcesJar()
 }
@@ -26,13 +26,13 @@ dependencies {
     mappings  "net.fabricmc:yarn:1.21+build.1:v2"
     modImplementation "net.fabricmc:fabric-loader:0.16.14"
 
-    // Fabric API (if needed it will be used at compile time and runtime; otherwise you can remove this)
+    // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.100.1+1.21"
 
-    // YACL (needed at compile time and runtime)
+    // YACL
     modImplementation "dev.isxander:yet-another-config-lib:3.6.2+1.21-fabric"
 
-    // ModMenu (needed at compile time if you implement ModMenuApi)
+    // ModMenu
     modImplementation "com.terraformersmc:modmenu:11.0.0"
 }
 
@@ -45,13 +45,5 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
-    options.release.set(21)
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
+    options.release.set(25)
 }

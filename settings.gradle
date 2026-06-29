@@ -17,14 +17,3 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = 'XaeroDisabledRadarFixer'
-
-// only build the “universal” subproject right now:
-//include 'fabric-1.21-universal'
-
-// when you’re ready to turn on the version-specific modules, uncomment these:
-// include 'fabric-1.21'
-// include 'fabric-1.21.1'
-// include 'fabric-1.21.2'
-// include 'fabric-1.21.3'
-// include 'fabric-1.21.4'
-// include 'fabric-1.21.5'

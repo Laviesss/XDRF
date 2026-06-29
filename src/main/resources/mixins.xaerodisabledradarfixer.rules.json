@@ -1,0 +1,11 @@
+{
+  "required": false,
+  "package": "com.laviesss.xaerodisabledradarfixer.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "XaeroDisabledRadarFixerRulesMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

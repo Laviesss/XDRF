@@ -20,7 +20,7 @@
         "modmenu": ["com.laviesss.xaerodisabledradarfixer.XaeroDisabledRadarFixerModMenu"]
     },
 
-    "mixins": ["mixins.xaerodisabledradarfixer.json"],
+    "mixins": ["mixins.xaerodisabledradarfixer.json", "mixins.xaerodisabledradarfixer.rules.json"],
 
     "depends": {
         "fabricloader": ">=0.15.0",
