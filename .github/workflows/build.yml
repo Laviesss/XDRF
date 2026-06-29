@@ -1,126 +1,17 @@
-name: Build
+name: CI
 
 on:
   push:
-    tags:
-      - 'v*'
-  workflow_dispatch:
-    inputs:
-      version_name:
-        description: 'Version – semver X.Y.Z (e.g. 2.0.1)'
-        required: true
-      release_notes:
-        description: 'Release notes (Markdown)'
-        required: false
-        default: ''
-      draft:
-        description: 'Create release as a draft?'
-        required: false
-        default: false
-        type: boolean
-      prerelease:
-        description: 'Mark as a pre-release?'
-        required: false
-        default: false
-        type: boolean
-
-permissions:
-  contents: write
+    branches: [main, v2]
+  pull_request:
+    branches: [main, v2]
 
 concurrency:
-  group: release-${{ github.ref }}
-  cancel-in-progress: false
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  validate:
-    name: Validate Version
-    runs-on: ubuntu-latest
-    outputs:
-      version_name:  ${{ steps.resolve.outputs.VERSION_NAME }}
-      tag_name:      ${{ steps.resolve.outputs.TAG_NAME }}
-      release_notes: ${{ steps.notes.outputs.BODY }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Resolve Version
-        id: resolve
-        shell: pwsh
-        run: |
-          $version = "${{ github.event.inputs.version_name }}"
-          if ("${{ github.event_name }}" -eq "push") {
-            $version = "${{ github.ref_name }}".TrimStart('v')
-          }
-          if ([string]::IsNullOrWhiteSpace($version)) {
-            throw "FATAL: version_name is required."
-          }
-          if ($version -notmatch '^\d+\.\d+\.\d+') {
-            throw "FATAL: '$version' is not a valid semver (X.Y.Z)."
-          }
-          "VERSION_NAME=$version" >> $env:GITHUB_OUTPUT
-          "TAG_NAME=v$version"    >> $env:GITHUB_OUTPUT
-
-      - name: Generate Release Notes
-        id: notes
-        shell: pwsh
-        run: |
-          $v = "${{ steps.resolve.outputs.VERSION_NAME }}"
-          $manual = "${{ github.event.inputs.release_notes }}"
-
-          if (-not [string]::IsNullOrWhiteSpace($manual)) {
-            $body = $manual
-          }
-          else {
-            $prev = git describe --tags --abbrev=0 HEAD^ 2>$null
-            if ($prev) {
-              $lines = @()
-              $currentType = ""
-              git log "$prev..HEAD" --pretty=format:"%s" --no-merges | ForEach-Object {
-                $msg = $_
-                if ($msg -match '^(feat|fix|docs|refactor|chore|ci|test|perf|build)(\([^)]+\))?:\s*(.*)') {
-                  $type  = $matches[1]
-                  $desc  = $matches[3]
-                  if ($type -ne $currentType) {
-                    $currentType = $type
-                    $typeLabel = @{
-                      feat     = 'Features'
-                      fix      = 'Bug Fixes'
-                      docs     = 'Documentation'
-                      refactor = 'Refactoring'
-                      chore    = 'Chores'
-                      ci       = 'CI/CD'
-                      test     = 'Tests'
-                      perf     = 'Performance'
-                      build    = 'Build'
-                    }
-                    $lines += "`n### $($typeLabel[$type])"
-                  }
-                  $lines += "- $desc"
-                }
-                else {
-                  $lines += "- $msg"
-                }
-              }
-              if ($lines.Count -gt 0) {
-                $body = "## What's Changed (since $prev)`n$($lines -join "`n")"
-              }
-              else {
-                $body = "## What's Changed`n- Maintenance and stability improvements."
-              }
-            }
-            else {
-              $body = "## Initial Release"
-            }
-          }
-          $body += "`n---`n### Requirements`n| | |`n|---|---|`n| **Minecraft** | 1.21 - 1.21.x |`n| **Mod Loader** | Fabric |`n| **Dependencies** | Fabric API, YACL, ModMenu |"
-          "BODY<<EOF" >> $env:GITHUB_OUTPUT
-          $body >> $env:GITHUB_OUTPUT
-          "EOF" >> $env:GITHUB_OUTPUT
-
   build:
-    name: Build Mod
-    needs: validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -150,36 +41,6 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: mod-jar
+          name: XDRF-dev-${{ github.sha }}
           path: build/libs/*.jar
           if-no-files-found: error
-
-  release:
-    name: Publish Release
-    needs: [validate, build]
-    if: always() && needs.validate.result == 'success' && needs.build.result == 'success'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: mod-jar
-          path: release-assets
-
-      - name: Generate SHA-256 checksums
-        shell: bash
-        run: |
-          cd release-assets
-          sha256sum * > "checksums-${{ needs.validate.outputs.version_name }}.txt"
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.validate.outputs.tag_name }}
-          name: ${{ needs.validate.outputs.tag_name }}
-          body: ${{ needs.validate.outputs.release_notes }}
-          draft: ${{ github.event.inputs.draft || 'false' }}
-          prerelease: ${{ github.event.inputs.prerelease || 'false' }}
-          files: release-assets/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
