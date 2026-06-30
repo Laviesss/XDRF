@@ -53,9 +53,9 @@ public class XaeroDisabledRadarFixerConfigScreen {
                                 .build())
 
                         .option(ButtonOption.createBuilder()
-                                .name(Text.literal("Resend Last Blocked Code"))
-                                .description(OptionDescription.of(Text.literal("Re-send the last blocked radar-disabling code.")))
-                                .action((screen, button) -> XaeroDisabledRadarFixerService.resendLastBlockedCode())
+                                .name(Text.literal("Enforce Blocking"))
+                                .description(OptionDescription.of(Text.literal("Replay the last blocked radar-disabling code or rules packet — whichever was blocked most recently this session.")))
+                                .action((screen, button) -> XaeroDisabledRadarFixerService.enforceBlocking())
                                 .build())
 
                         .option(ButtonOption.createBuilder()

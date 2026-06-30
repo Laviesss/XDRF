@@ -2,6 +2,7 @@ package com.laviesss.xaerodisabledradarfixer.mixin;
 
 import com.laviesss.xaerodisabledradarfixer.config.XaeroDisabledRadarFixerConfig;
 import com.laviesss.xaerodisabledradarfixer.service.XaeroDisabledRadarFixerService;
+import com.laviesss.xaerodisabledradarfixer.mixin.XaeroDisabledRadarFixerRulesMixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -35,6 +36,8 @@ public class XaeroDisabledRadarFixerMixin {
 
         if (shouldBlock) {
             XaeroDisabledRadarFixerService.setLastSentCode(content);
+            XaeroDisabledRadarFixerService.setLastBlockedType(XaeroDisabledRadarFixerService.LastBlockedType.CHAT_CODE);
+            XaeroDisabledRadarFixerRulesMixin.clearStoredPacket();
 
             LOGGER.info("[XDRF] Intercepted and blocked radar-disable message: {}", content);
 

@@ -18,7 +18,7 @@ Some Minecraft servers send hidden/obfuscated chat messages or enforce plugin-ch
 - Optional in-game chat notifications when something is blocked
 - Optional toast pop-ups as visual alerts
 - Optional sound effect on block (villager celebrate)
-- Resend last blocked code — reapply previously blocked radar state if moderators ask for minimap proof
+- Enforce Blocking — replay whichever was blocked last (chat code or rules packet), so you can comply if moderators ask for minimap proof
 - Send reset code — manually restore radar to its unblocked state
 - Fully configurable via Mod Menu + YACL (Yet Another Config Lib)
 
