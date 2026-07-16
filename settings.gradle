@@ -4,6 +4,8 @@ pluginManagement {
         maven { url = 'https://maven.fabricmc.net/' }
         maven { url = 'https://maven.terraformersmc.com/' }
         maven { url = 'https://maven.isxander.dev/releases' }
+        // gXLg Maven — hosts versiont-toolchain plugin + versiont-library
+        maven { url = 'https://gxlg.github.io/maven-repo/' }
     }
 }
 
@@ -13,6 +15,8 @@ dependencyResolutionManagement {
         maven { url = 'https://maven.fabricmc.net/' }
         maven { url = 'https://maven.terraformersmc.com/' }
         maven { url = 'https://maven.isxander.dev/releases' }
+        // gXLg Maven — hosts versiont-toolchain plugin + versiont-library
+        maven { url = 'https://gxlg.github.io/maven-repo/' }
     }
 }
 

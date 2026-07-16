@@ -1,17 +1,17 @@
 package com.laviesss.xaerodisabledradarfixer.mixin;
 
-import com.laviesss.xaerodisabledradarfixer.config.XaeroDisabledRadarFixerConfig;
 import com.laviesss.xaerodisabledradarfixer.service.XaeroDisabledRadarFixerService;
-import com.laviesss.xaerodisabledradarfixer.mixin.XaeroDisabledRadarFixerRulesMixin;
-import net.minecraft.client.MinecraftClient;
+import dev.gxlg.versiont.api.R;
+import dev.gxlg.versiont.gen.Minecraft;
+import dev.gxlg.versiont.gen.LocalPlayer;
+import dev.gxlg.versiont.gen.Component;
+import dev.gxlg.versiont.gen.ChatFormatting;
+import dev.gxlg.versiont.gen.SoundEvents;
+import dev.gxlg.versiont.gen.SystemToast;
+import dev.gxlg.versiont.gen.ToastManager;
+import dev.gxlg.versiont.gen.ClientboundSystemChatPacket;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.toast.SystemToast;
 import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,45 +19,58 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public class XaeroDisabledRadarFixerMixin {
-    private static final Logger LOGGER = LoggerFactory.getLogger("XDRF-Mixin");
 
+    private static final java.util.Set<String> BLOCKED_CODES = java.util.Set.of(
+        "§f§a§i§r§x§a§e§r§o",
+        "§x§a§e§r§o§w§m§n§e§t§h§e§r§i§s§f§a§i§r",
+        "§n§o§m§i§n§i§m§a§p"
+    );
+
+    // Use 1.21 Yarn-mapped type (GameMessageS2CPacket) for Mixin matching
+    // Fabric Loader remaps at runtime for 1.21.11+
     @Inject(method = "onGameMessage", at = @At("HEAD"), cancellable = true)
     private void onGameMessage(GameMessageS2CPacket packet, CallbackInfo ci) {
-        XaeroDisabledRadarFixerConfig cfg = XaeroDisabledRadarFixerConfig.get();
-        if (!cfg.isEnabled()) return;
-        if (XaeroDisabledRadarFixerService.isBlockingSuppressed()) return;
+        // Wrap in Version't wrapper for cross-version handling
+        ClientboundSystemChatPacket wrappedPacket = R.wrapperInst(ClientboundSystemChatPacket.class, packet);
 
-        String content = packet.content().getString();
+        if (!XaeroDisabledRadarFixerService.shouldBlockChatMessage(wrappedPacket)) {
+            return;
+        }
 
-        // These are the ONLY patterns that should be blocked
-        boolean shouldBlock = content.equals("§f§a§i§r§x§a§e§r§o")
-                || content.equals("§x§a§e§r§o§w§m§n§e§t§h§e§r§i§s§f§a§i§r")
-                || content.equals("§n§o§m§i§n§i§m§a§p");
+        XaeroDisabledRadarFixerService.recordBlockedChatPacket(wrappedPacket);
 
-        if (shouldBlock) {
-            XaeroDisabledRadarFixerService.setLastSentCode(content);
-            XaeroDisabledRadarFixerService.setLastBlockedType(XaeroDisabledRadarFixerService.LastBlockedType.CHAT_CODE);
-            XaeroDisabledRadarFixerRulesMixin.clearStoredPacket();
-
-            LOGGER.info("[XDRF] Intercepted and blocked radar-disable message: {}", content);
-
-            MinecraftClient client = MinecraftClient.getInstance();
-            ClientPlayerEntity player = client.player;
-
-            if (cfg.isShowChatMessage() && player != null) {
-                player.sendMessage(Text.literal("A radar blocking message was prevented.").formatted(Formatting.DARK_PURPLE), false);
-            }
-
-            if (cfg.isShowToast()) {
-                SystemToast.add(
-                        client.getToastManager(),
-                        SystemToast.Type.WORLD_BACKUP,
-                        Text.literal("Xaero Disabled Radar Fixer"),
-                        Text.literal("Blocked a radar-disabling message.").formatted(Formatting.DARK_PURPLE)
+        if (XaeroDisabledRadarFixerService.shouldShowChatMessage()) {
+            Minecraft mc = Minecraft.getInstance();
+            LocalPlayer player = mc.getPlayerField();
+            if (player != null) {
+                player.sendMessage(
+                    Component.literal("[XDRF] A radar blocking message was prevented.")
+                        .formatted(ChatFormatting.DARK_PURPLE()),
+                    false
                 );
             }
-
-            ci.cancel();
         }
+
+        if (XaeroDisabledRadarFixerService.shouldShowToast()) {
+            Minecraft mc = Minecraft.getInstance();
+            ToastManager tm = (ToastManager) R.clz(Minecraft.class).inst(mc.unwrap())
+                .fld("toastManager", ToastManager.class).get();
+            if (tm != null) {
+                SystemToast.add(tm, null,
+                    Component.literal("Radar Blocker").formatted(ChatFormatting.DARK_PURPLE()),
+                    Component.literal("Blocked a radar-disabling message.").formatted(ChatFormatting.DARK_PURPLE())
+                );
+            }
+        }
+
+        if (XaeroDisabledRadarFixerService.shouldPlaySound()) {
+            Minecraft mc = Minecraft.getInstance();
+            LocalPlayer player = mc.getPlayerField();
+            if (player != null) {
+                player.playSound(SoundEvents.ENTITY_VILLAGER_CELEBRATE(), 1.0F, 1.0F);
+            }
+        }
+
+        ci.cancel();
     }
 }

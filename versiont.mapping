@@ -1,0 +1,62 @@
+# Version't mapping for XDRF (Xaero Disabled Radar Fixer)
+# Single mapping drives MC 1.21 through 26.3 from one source tree
+# Generated wrappers use last slash segment as simple name, slash path as package under dev.gxlg.versiont.gen
+
+# Core client classes - use forward slashes consistently for proper package generation
+import net.minecraft.class_310/net/minecraft/client/MinecraftClient/net/minecraft/client/Minecraft
+import net.minecraft.class_746/net/minecraft/client/network/ClientPlayerEntity/net/minecraft/client/player/LocalPlayer
+import net.minecraft.class_304/net/minecraft/client/option/KeyBinding/net/minecraft/client/KeyMapping/net/minecraft/class_304
+import net.minecraft.class_2561/net/minecraft/text/Text/net/minecraft/network/chat/Component
+import net.minecraft.class_10918/net/minecraft/util/Formatting/net/minecraft/network/chat/ChatFormatting
+import net.minecraft.class_3417/net/minecraft/sound/SoundEvents
+import net.minecraft.class_370/net/minecraft/client/toast/SystemToast
+import net.minecraft.class_374/net/minecraft/client/toast/ToastManager
+import net.minecraft.class_350/net/minecraft/client/gui/screen/Screen
+import net.minecraft.class_2588/net/minecraft/network/packet/s2c/play/GameMessageS2CPacket
+import net.minecraft.class_2594/net/minecraft/network/protocol/game/ClientboundSystemChatPacket
+import net.minecraft.class_915/net/minecraft/client/network/ClientPlayNetworkHandler/net/minecraft/client/multiplayer/ClientPacketListener
+
+# Wrapper class definitions
+
+class Minecraft
+    static Minecraft getInstance()
+    @Nullable LocalPlayer player
+    @Nullable ToastManager toastManager
+    @Nullable ClientPacketListener networkHandler
+
+class LocalPlayer
+    void sendMessage(Component text, boolean overlay)
+    void playSound(SoundEvents event, float volume, float pitch)
+
+class KeyMapping
+    # Pre-1.21.11: (String, String, int, String)
+    <init>(String id, String translationKey, int code, String categoryId)
+    boolean getWasPressedField()
+
+class Component
+    static Component literal(String text)
+    Component formatted(ChatFormatting formatting)
+
+class ChatFormatting
+    static final ChatFormatting DARK_PURPLE
+
+class SoundEvents
+    static final SoundEvents ENTITY_VILLAGER_CELEBRATE
+
+class SystemToast
+    static void add(ToastManager manager, Object type, Component title, Component text)
+
+class ToastManager
+    # Marker wrapper - no methods needed
+
+class Screen
+    # Marker wrapper for YACL config screen parent type
+
+class GameMessageS2CPacket
+    Component getContentField()
+
+class ClientboundSystemChatPacket
+    <init>(Component content, boolean overlay)
+
+class ClientPacketListener
+    void onGameMessage(ClientboundSystemChatPacket packet)

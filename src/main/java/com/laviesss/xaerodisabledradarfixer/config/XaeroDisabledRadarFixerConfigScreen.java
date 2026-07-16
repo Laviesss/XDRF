@@ -21,34 +21,22 @@ public class XaeroDisabledRadarFixerConfigScreen {
 
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Enable Radar Fixer"))
-                                .description(OptionDescription.of(Text.literal("Toggle blocking of server radar‑disable messages.")))
-                                .binding(
-                                        config.isEnabled(),
-                                        config::isEnabled,
-                                        config::setEnabled
-                                )
+                                .description(OptionDescription.of(Text.literal("Toggle blocking of server radar-disable messages.")))
+                                .binding(config.isEnabled(), config::isEnabled, config::setEnabled)
                                 .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
                                 .build())
 
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Show Chat Message"))
                                 .description(OptionDescription.of(Text.literal("Notify via chat when a radar message is blocked.")))
-                                .binding(
-                                        config.isShowChatMessage(),
-                                        config::isShowChatMessage,
-                                        config::setShowChatMessage
-                                )
+                                .binding(config.isShowChatMessage(), config::isShowChatMessage, config::setShowChatMessage)
                                 .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
                                 .build())
 
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Show Toast Notifications"))
                                 .description(OptionDescription.of(Text.literal("Notify via toast when a radar message is blocked.")))
-                                .binding(
-                                        config.isShowToast(),
-                                        config::isShowToast,
-                                        config::setShowToast
-                                )
+                                .binding(config.isShowToast(), config::isShowToast, config::setShowToast)
                                 .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
                                 .build())
 

@@ -7,12 +7,7 @@ import net.minecraft.client.gui.screen.Screen;
 
 public class XaeroDisabledRadarFixerModMenu implements ModMenuApi {
     @Override
-    public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return new ConfigScreenFactory<Screen>() {
-            @Override
-            public Screen create(Screen parent) {
-                return XaeroDisabledRadarFixerConfigScreen.create(parent);
-            }
-        };
+    public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
+        return parent -> XaeroDisabledRadarFixerConfigScreen.create(parent);
     }
 }
