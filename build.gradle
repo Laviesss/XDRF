@@ -1,5 +1,6 @@
 plugins {
-    id 'fabric-loom' version '1.17.11'
+    // CRITICAL: Swapped to fabric-loom-remap so Loom 1.17.x handles the 1.21 obfuscated base properly
+    id 'net.fabricmc.fabric-loom-remap' version '1.14.9'
     id 'maven-publish'
     id 'dev.gxlg.versiont-toolchain' version '1.3.4'
 }
@@ -9,7 +10,8 @@ version = '2.1.0-universal'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        // Modern Java version required for the 26.x ecosystem
+        languageVersion = JavaLanguageVersion.of(25)
     }
     withSourcesJar()
 }
@@ -79,7 +81,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
-    options.release.set(21)
+    options.release.set(25)
 }
 
 tasks.named("sourcesJar") {

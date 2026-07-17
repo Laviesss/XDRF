@@ -5,7 +5,6 @@
 # Core client classes - use forward slashes consistently for proper package generation
 import net.minecraft.class_310/net/minecraft/client/MinecraftClient/net/minecraft/client/Minecraft
 import net.minecraft.class_746/net/minecraft/client/network/ClientPlayerEntity/net/minecraft/client/player/LocalPlayer
-import net.minecraft.class_304/net/minecraft/client/option/KeyBinding/net/minecraft/client/KeyMapping
 import net.minecraft.class_2561/net/minecraft/text/Text/net/minecraft/network/chat/Component
 import net.minecraft.class_10918/net/minecraft/util/Formatting/net/minecraft/network/chat/ChatFormatting
 import net.minecraft.class_3417/net/minecraft/sound/SoundEvents
@@ -27,14 +26,6 @@ class Minecraft
 class LocalPlayer
     void sendMessage(Component text, boolean overlay)
     void playSound(SoundEvents event, float volume, float pitch)
-
-class KeyMapping
-    # Pre-1.21.11: (String, String, int, String)
-    <init>(String id, String translationKey, int code, String categoryId)
-    # 1.21.11+: (String, InputConstants.Type, int, KeyBinding.Category)
-    # Note: inner classes handled via reflection in Java code
-    <init>(String id, Object type, int code, Object category)
-    boolean getWasPressedField()
 
 class Component
     static Component literal(String text)

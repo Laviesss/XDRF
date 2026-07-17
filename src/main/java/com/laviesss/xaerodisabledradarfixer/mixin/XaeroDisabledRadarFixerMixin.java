@@ -26,18 +26,13 @@ public class XaeroDisabledRadarFixerMixin {
         "§n§o§m§i§n§i§m§a§p"
     );
 
-    // Use 1.21 Yarn-mapped type (GameMessageS2CPacket) for Mixin matching
-    // Fabric Loader remaps at runtime for 1.21.11+
     @Inject(method = "onGameMessage", at = @At("HEAD"), cancellable = true)
     private void onGameMessage(GameMessageS2CPacket packet, CallbackInfo ci) {
-        // Wrap in Version't wrapper for cross-version handling
-        ClientboundSystemChatPacket wrappedPacket = R.wrapperInst(ClientboundSystemChatPacket.class, packet);
-
-        if (!XaeroDisabledRadarFixerService.shouldBlockChatMessage(wrappedPacket)) {
+        if (!XaeroDisabledRadarFixerService.shouldBlockChatMessage(packet)) {
             return;
         }
 
-        XaeroDisabledRadarFixerService.recordBlockedChatPacket(wrappedPacket);
+        XaeroDisabledRadarFixerService.recordBlockedChatMessage(packet);
 
         if (XaeroDisabledRadarFixerService.shouldShowChatMessage()) {
             Minecraft mc = Minecraft.getInstance();

@@ -7,6 +7,7 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
+import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
@@ -26,16 +27,23 @@ public class XaeroDisabledRadarFixerConfigScreen {
                                 .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
                                 .build())
 
+                        .option(Option.<XaeroDisabledRadarFixerConfig.BlockingScope>createBuilder()
+                                .name(Text.literal("Blocking Scope"))
+                                .description(OptionDescription.of(Text.literal("What type of radar-disabling attempts to block.")))
+                                .binding(config.getBlockingScope(), config::getBlockingScope, config::setBlockingScope)
+                                .controller(opt -> EnumControllerBuilder.create(opt))
+                                .build())
+
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Show Chat Message"))
-                                .description(OptionDescription.of(Text.literal("Notify via chat when a radar message is blocked.")))
+                                .description(OptionDescription.of(Text.literal("Notify via chat when a radar message or packet is blocked.")))
                                 .binding(config.isShowChatMessage(), config::isShowChatMessage, config::setShowChatMessage)
                                 .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
                                 .build())
 
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Show Toast Notifications"))
-                                .description(OptionDescription.of(Text.literal("Notify via toast when a radar message is blocked.")))
+                                .description(OptionDescription.of(Text.literal("Notify via toast when a radar message or packet is blocked.")))
                                 .binding(config.isShowToast(), config::isShowToast, config::setShowToast)
                                 .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
                                 .build())

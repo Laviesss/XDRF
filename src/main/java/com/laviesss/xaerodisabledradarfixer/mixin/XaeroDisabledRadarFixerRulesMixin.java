@@ -43,41 +43,41 @@ public class XaeroDisabledRadarFixerRulesMixin {
 
         XaeroDisabledRadarFixerClientMod.LOGGER.info("[XDRF] Blocked a server-enforced minimap rules packet (radar/cave-mode). Total: {}", cfg.getPacketBlockedCount());
 
-        Minecraft mc = Minecraft.getInstance();
-        LocalPlayer player = mc.getPlayerField();
+        dev.gxlg.versiont.gen.Minecraft mc = dev.gxlg.versiont.gen.Minecraft.getInstance();
+        dev.gxlg.versiont.gen.LocalPlayer player = mc.getPlayerField();
 
         if (cfg.isShowChatMessage() && player != null) {
             player.sendMessage(
-                Component.literal("A server-enforced minimap rules packet was prevented.")
-                    .formatted(ChatFormatting.DARK_PURPLE()),
+                dev.gxlg.versiont.gen.Component.literal("A server-enforced minimap rules packet was prevented.")
+                    .formatted(dev.gxlg.versiont.gen.ChatFormatting.DARK_PURPLE()),
                 false
             );
         }
 
         if (cfg.isShowToast()) {
-            ToastManager tm = (ToastManager) R.clz(Minecraft.class).inst(mc.unwrap())
-                .fld("toastManager", ToastManager.class).get();
+            dev.gxlg.versiont.gen.ToastManager tm = (dev.gxlg.versiont.gen.ToastManager) dev.gxlg.versiont.api.R.clz(dev.gxlg.versiont.gen.Minecraft.class).inst(mc.unwrap())
+                .fld("toastManager", dev.gxlg.versiont.gen.ToastManager.class).get();
             if (tm != null) {
-                SystemToast.add(tm, null,
-                    Component.literal("Xaero Disabled Radar Fixer").formatted(ChatFormatting.DARK_PURPLE()),
-                    Component.literal("Blocked a server-enforced minimap rules packet.").formatted(ChatFormatting.DARK_PURPLE())
+                dev.gxlg.versiont.gen.SystemToast.add(tm, null,
+                    dev.gxlg.versiont.gen.Component.literal("Xaero Disabled Radar Fixer").formatted(dev.gxlg.versiont.gen.ChatFormatting.DARK_PURPLE()),
+                    dev.gxlg.versiont.gen.Component.literal("Blocked a server-enforced minimap rules packet.").formatted(dev.gxlg.versiont.gen.ChatFormatting.DARK_PURPLE())
                 );
             }
         }
 
         if (cfg.isPlaySound() && player != null) {
-            player.playSound(SoundEvents.ENTITY_VILLAGER_CELEBRATE(), 1.0F, 1.0F);
+            player.playSound(dev.gxlg.versiont.gen.SoundEvents.ENTITY_VILLAGER_CELEBRATE(), 1.0F, 1.0F);
         }
 
         ci.cancel();
     }
 
-    public static void clearStoredPacket() {
+    private static void clearStoredPacket() {
         storedPacket = null;
         storedHandler = null;
     }
 
-    public static void replayLastPacket() {
+    static void replayLastPacket() {
         if (storedPacket == null || storedHandler == null) {
             XaeroDisabledRadarFixerClientMod.LOGGER.warn("[XDRF] No stored packet to replay.");
             return;

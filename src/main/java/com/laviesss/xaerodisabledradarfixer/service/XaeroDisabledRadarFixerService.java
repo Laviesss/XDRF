@@ -10,6 +10,8 @@ import dev.gxlg.versiont.gen.ClientboundSystemChatPacket;
 import dev.gxlg.versiont.gen.Component;
 import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
 
+import java.lang.reflect.Method;
+
 public final class XaeroDisabledRadarFixerService {
 
     public enum LastBlockedType { CHAT_CODE, RULES_PACKET }
@@ -31,12 +33,11 @@ public final class XaeroDisabledRadarFixerService {
         XaeroDisabledRadarFixerConfig config = XaeroDisabledRadarFixerConfig.get();
         if (!config.isEnabled()) return false;
         if (suppressBlocking) return false;
-        // Check if packet content matches blocked codes
+        if (config.getBlockingScope() == XaeroDisabledRadarFixerConfig.BlockingScope.PACKET) return false;
         return false;
     }
 
-    public static void recordBlockedChatPacket(dev.gxlg.versiont.gen.ClientboundSystemChatPacket packet) {
-        // Record the packet for later replay
+    public static void recordBlockedChatMessage(dev.gxlg.versiont.gen.ClientboundSystemChatPacket packet) {
     }
 
     // Accepts raw GameMessageS2CPacket (1.21 Yarn name) from public API
@@ -44,8 +45,17 @@ public final class XaeroDisabledRadarFixerService {
         return shouldBlockChatMessage(R.wrapperInst(dev.gxlg.versiont.gen.ClientboundSystemChatPacket.class, packet));
     }
 
-    public static void recordBlockedChatPacket(GameMessageS2CPacket packet) {
-        recordBlockedChatPacket(R.wrapperInst(dev.gxlg.versiont.gen.ClientboundSystemChatPacket.class, packet));
+    public static void recordBlockedChatMessage(GameMessageS2CPacket packet) {
+        recordBlockedChatMessage(R.wrapperInst(dev.gxlg.versiont.gen.ClientboundSystemChatPacket.class, packet));
+    }
+
+    public static boolean shouldBlockPacketRules(Object packet) {
+        XaeroDisabledRadarFixerConfig config = XaeroDisabledRadarFixerConfig.get();
+        return config.isEnabled() && config.isBlockPacketRules() && !suppressBlocking
+                && config.getBlockingScope() != XaeroDisabledRadarFixerConfig.BlockingScope.CHAT_MESSAGE;
+    }
+
+    public static void recordBlockedPacket(Object packet) {
     }
 
     public static boolean shouldShowChatMessage() {
@@ -71,7 +81,7 @@ public final class XaeroDisabledRadarFixerService {
             }
             case RULES_PACKET -> {
                 suppressBlocking = true;
-                XaeroDisabledRadarFixerRulesMixin.replayLastPacket();
+                replayRulesPacket();
                 suppressBlocking = false;
             }
         }
@@ -82,6 +92,17 @@ public final class XaeroDisabledRadarFixerService {
         suppressBlocking = true;
         sendSystemMessage(resetCode);
         suppressBlocking = false;
+    }
+
+    private static void replayRulesPacket() {
+        try {
+            Class<?> mixinClass = Class.forName("com.laviesss.xaerodisabledradarfixer.mixin.XaeroDisabledRadarFixerRulesMixin");
+            Method replayMethod = mixinClass.getDeclaredMethod("replayLastPacket");
+            replayMethod.setAccessible(true);
+            replayMethod.invoke(null);
+        } catch (Exception e) {
+            XaeroDisabledRadarFixerClientMod.LOGGER.error("[XDRF] Failed to replay rules packet via reflection", e);
+        }
     }
 
     private static void sendSystemMessage(String content) {

@@ -13,12 +13,29 @@ public class XaeroDisabledRadarFixerConfig {
     private static final File CONFIG_FILE = new File("config/xaero_disabled_radar_fixer.json");
     private static XaeroDisabledRadarFixerConfig INSTANCE;
 
+    public enum BlockingScope {
+        CHAT_MESSAGE("Chat Message"),
+        PACKET("Packet"),
+        BOTH("Both");
+
+        private final String displayName;
+
+        BlockingScope(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+    }
+
     private boolean enabled = true;
     private boolean showChatMessage = true;
     private boolean showToast = true;
     private boolean blockPacketRules = true;
     private boolean playSound = true;
     private boolean enableKeybind = true;
+    private BlockingScope blockingScope = BlockingScope.BOTH;
     private int blockedCount = 0;
     private int packetBlockedCount = 0;
 
@@ -59,8 +76,8 @@ public class XaeroDisabledRadarFixerConfig {
     public void setBlockPacketRules(boolean blockPacketRules) { this.blockPacketRules = blockPacketRules; save(); }
     public boolean isPlaySound() { return playSound; }
     public void setPlaySound(boolean playSound) { this.playSound = playSound; save(); }
-    public boolean isEnableKeybind() { return enableKeybind; }
-    public void setEnableKeybind(boolean enableKeybind) { this.enableKeybind = enableKeybind; save(); }
+    public BlockingScope getBlockingScope() { return blockingScope; }
+    public void setBlockingScope(BlockingScope blockingScope) { this.blockingScope = blockingScope; save(); }
     public int getBlockedCount() { return blockedCount; }
     public int getPacketBlockedCount() { return packetBlockedCount; }
     public void incrementPacketBlockedCount() { this.packetBlockedCount++; save(); }
