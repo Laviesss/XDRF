@@ -8,35 +8,73 @@ group = 'com.laviesss.xaerodisabledradarfixer'
 version = '2.1.0-universal'
 
 java {
-    toolchain { languageVersion = JavaLanguageVersion.of(21) }
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
     withSourcesJar()
 }
 
-versiont { mapping = file('versiont.mapping') }
+versiont {
+    mapping = file("versiont.mapping")
+}
 
 repositories {
     mavenCentral()
-    maven { url 'https://maven.fabricmc.net/' }
-    maven { url 'https://maven.terraformersmc.com/' }
-    maven { url 'https://maven.isxander.dev/releases' }
-    maven { url 'https://api.modrinth.com/maven' }
-    maven { url 'https://gxlg.github.io/maven-repo/' }
+
+    maven {
+        url = "https://maven.fabricmc.net/"
+    }
+
+    maven {
+        url = "https://maven.terraformersmc.com/"
+    }
+
+    maven {
+        url = "https://maven.isxander.dev/releases"
+    }
+
+    maven {
+        url = "https://gxlg.github.io/maven-repo/"
+    }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 dependencies {
+    // Minecraft
     minecraft "com.mojang:minecraft:1.21"
-    mappings  "net.fabricmc:yarn:1.21+build.1:v2"
+    mappings "net.fabricmc:yarn:1.21+build.1:v2"
+
+    // Loader
     modImplementation "net.fabricmc:fabric-loader:0.18.6"
+
+    // Fabric API (Modrinth Maven)
+    modImplementation "maven.modrinth:P7dR8mSH:oGwyXeEI"
+
+    // UI
     modImplementation "dev.isxander:yet-another-config-lib:3.6.2+1.21-fabric"
     modImplementation "com.terraformersmc:modmenu:11.0.0"
+
+    // Version't runtime
     include "dev.gxlg:versiont-library:1.2.3"
 }
 
-versiont { mapping = file('versiont.mapping') }
-
 processResources {
-    inputs.property "version", project.version
-    filesMatching("fabric.mod.json") { expand "version": project.version }
+    inputs.property("version", project.version)
+
+    filesMatching("fabric.mod.json") {
+        expand(version: project.version)
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -44,8 +82,6 @@ tasks.withType(JavaCompile).configureEach {
     options.release.set(21)
 }
 
-tasks.named('sourcesJar') { dependsOn tasks.named('versiontLayer') }
-
-tasks.named('runClient') {
-    systemProperty 'fabric.loader.namespace', 'official'
+tasks.named("sourcesJar") {
+    dependsOn(tasks.named("versiontLayer"))
 }
