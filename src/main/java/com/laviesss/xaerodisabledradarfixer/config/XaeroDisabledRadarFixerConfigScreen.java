@@ -31,7 +31,8 @@ public class XaeroDisabledRadarFixerConfigScreen {
                                 .name(Text.literal("Blocking Scope"))
                                 .description(OptionDescription.of(Text.literal("What type of radar-disabling attempts to block.")))
                                 .binding(config.getBlockingScope(), config::getBlockingScope, config::setBlockingScope)
-                                .controller(opt -> EnumControllerBuilder.create(opt))
+                                .controller(opt -> EnumControllerBuilder.create(opt)
+                                        .enumClass(XaeroDisabledRadarFixerConfig.BlockingScope.class))
                                 .build())
 
                         .option(Option.<Boolean>createBuilder()
@@ -48,16 +49,23 @@ public class XaeroDisabledRadarFixerConfigScreen {
                                 .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
                                 .build())
 
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Verbose Logging"))
+                                .description(OptionDescription.of(Text.literal("Log detailed information about blocked chat messages and packets (for debugging).")))
+                                .binding(config.isVerboseLogging(), config::isVerboseLogging, config::setVerboseLogging)
+                                .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
+                                .build())
+
                         .option(ButtonOption.createBuilder()
                                 .name(Text.literal("Enforce Blocking"))
-                                .description(OptionDescription.of(Text.literal("Replay the last blocked radar-disabling code or rules packet — whichever was blocked most recently this session.")))
+                                .description(OptionDescription.of(Text.literal("Replay the last blocked radar-disabling code or rules packet — based on what was cached this session.")))
                                 .action((screen, button) -> XaeroDisabledRadarFixerService.enforceBlocking())
                                 .build())
 
                         .option(ButtonOption.createBuilder()
-                                .name(Text.literal("Send Reset Code"))
-                                .description(OptionDescription.of(Text.literal("Send the original minimap reset message.")))
-                                .action((screen, button) -> XaeroDisabledRadarFixerService.sendResetCode())
+                                .name(Text.literal("Revoke Blocking"))
+                                .description(OptionDescription.of(Text.literal("Send the reset code or modified rules packet to undo the server's blocking attempt — based on what was cached this session.")))
+                                .action((screen, button) -> XaeroDisabledRadarFixerService.revokeBlocking())
                                 .build())
 
                         .build())

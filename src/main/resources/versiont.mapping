@@ -1,0 +1,73 @@
+# ============================================================
+# Version't mapping for XDRF (Xaero Disabled Radar Fixer)
+# Pattern follows the libr-getter reference by the version't creator:
+# https://github.com/gXLg/libr-getter/blob/master/src/main/resources/versiont.mapping
+#
+# Convention from that reference:
+#   1. Class imports: intermediary_name/mojmap_runtime_fqn[/extras]
+#      Class.forName tries each path in order; takes first match.
+#   2. Method/field entries: intermediary_name/mojmap_name
+#      The mojmap name is the wrapper-exposed Java method/field name AND
+#      the primary runtime reflection target. Intermediary is the fallback.
+#   3. Mojmap is used throughout for consistency across 1.17 → 26.x.
+#
+# All entries verified against the libr-getter reference facts and
+# Minecraft Dev MCP CLI cross-checks.
+# ============================================================
+
+# ── Core ────────────────────────────────────────────────────
+import net.minecraft.class_310/net.minecraft.client.Minecraft
+import net.minecraft.class_746/net.minecraft.client.player.LocalPlayer
+import net.minecraft.class_2561/net.minecraft.network.chat.Component
+import net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent
+import net.minecraft.class_124/net.minecraft.ChatFormatting
+import net.minecraft.class_374/net.minecraft.client.gui.components.toasts.ToastManager
+import net.minecraft.class_329/net.minecraft.client.gui.Gui
+import net.minecraft.class_437/net.minecraft.client.gui.screens.Screen
+import net.minecraft.class_7439/net.minecraft.network.packet.s2c.play.GameMessageS2CPacket/net.minecraft.network.protocol.game.ClientboundSystemChatPacket
+import net.minecraft.class_634/net.minecraft.client.network.ClientPlayNetworkHandler/net.minecraft.client.multiplayer.ClientPacketListener
+
+class Minecraft
+    static Minecraft method_1551/getInstance()
+    @Nullable LocalPlayer field_1724/player
+    ToastManager method_1566/getToastManager()
+    @Nullable ClientPacketListener method_1562/getNetworkHandler()
+    @Nullable Gui gui
+
+class LocalPlayer
+    # method_7353 verified by MCP on Player as displayClientMessage
+    # 26.x renamed: sendSystemMessage / sendOverlayMessage take its place
+    void method_7353/displayClientMessage(Component text, boolean overlay)
+    # 26.1+
+    void sendSystemMessage(Component text)
+    void sendOverlayMessage(Component text)
+
+class Component
+    # nullToEmpty is method_30163 — verified on Component interface
+    static Component method_30163/nullToEmpty(String text)
+
+class MutableComponent
+    # literal is method_43470 — verified return type is MutableComponent on static Component.literal()
+    static MutableComponent method_43470/literal(String content)
+    # withStyle(ChatFormatting) is method_27692 — matches libr-getter EXACTLY
+    MutableComponent method_27692/withStyle(ChatFormatting formatting)
+
+class ChatFormatting
+    static final ChatFormatting field_1064/DARK_PURPLE
+
+class Gui
+    # 26.x only: Gui.toastManager() returns ToastManager
+    ToastManager toastManager/toastManager()
+
+class ToastManager
+    # marker (1.21.11 runtime type)
+
+class ClientboundSystemChatPacket
+    # 1.21.11 record `public record ClientboundSystemChatPacket(Component content, boolean overlay)`
+    # content() is the canonical record accessor (mojmap), also first mojmap half.
+    Component method_11776/content()
+    <init>(Component content, boolean overlay)
+
+class ClientPacketListener
+    # method_43596 is handleSystemChat signature on ClientPacketListener
+    void method_43596/handleSystemChat(ClientboundSystemChatPacket packet)

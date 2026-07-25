@@ -35,6 +35,7 @@ public class XaeroDisabledRadarFixerConfig {
     private boolean blockPacketRules = true;
     private boolean playSound = true;
     private boolean enableKeybind = true;
+    private boolean verboseLogging = false;
     private BlockingScope blockingScope = BlockingScope.BOTH;
     private int blockedCount = 0;
     private int packetBlockedCount = 0;
@@ -76,6 +77,8 @@ public class XaeroDisabledRadarFixerConfig {
     public void setBlockPacketRules(boolean blockPacketRules) { this.blockPacketRules = blockPacketRules; save(); }
     public boolean isPlaySound() { return playSound; }
     public void setPlaySound(boolean playSound) { this.playSound = playSound; save(); }
+    public boolean isVerboseLogging() { return verboseLogging; }
+    public void setVerboseLogging(boolean verboseLogging) { this.verboseLogging = verboseLogging; save(); }
     public BlockingScope getBlockingScope() { return blockingScope; }
     public void setBlockingScope(BlockingScope blockingScope) { this.blockingScope = blockingScope; save(); }
     public int getBlockedCount() { return blockedCount; }
