@@ -17,7 +17,7 @@ import net.minecraft.text.Text;
  * at build time. Version't handles intermediary remapping at runtime.
  * Override methods in newer version subclasses if YACL API changes.
  */
-public class ConfigScreenBuilder_1_21 extends ConfigScreenBuilder.Base {
+public class XaeroDisabledRadarFixerConfigScreen_1_21 extends XaeroDisabledRadarFixerConfigScreen.Base {
     @Override
     protected Screen createScreenImpl(Screen parent) {
         XaeroDisabledRadarFixerConfig config = XaeroDisabledRadarFixerConfig.get();
