@@ -60,7 +60,8 @@ decomp-*.txt
 decomp-*.java
 libr-getter/
 
-# LLM / agent working files
+# Version't docs / LLM working files
 CONTEXT.md
 wiki_for_llm.txt
+docs/
 .omo/
