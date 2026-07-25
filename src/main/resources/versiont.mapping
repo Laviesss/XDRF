@@ -71,3 +71,20 @@ class ClientboundSystemChatPacket
 class ClientPacketListener
     # method_43596 is handleSystemChat signature on ClientPacketListener
     void method_43596/handleSystemChat(ClientboundSystemChatPacket packet)
+
+# ── YACL (Yet Another Config Lib) ──────────────────────────
+# Non-MC classes use single-name import (no intermediary prefix)
+import dev.isxander.yacl3.api.YetAnotherConfigLib
+import dev.isxander.yacl3.api.ConfigCategory
+import dev.isxander.yacl3.api.ConfigCategory$Builder
+import dev.isxander.yacl3.api.Option
+import dev.isxander.yacl3.api.Option$Builder
+import dev.isxander.yacl3.api.OptionDescription
+import dev.isxander.yacl3.api.ButtonOption
+import dev.isxander.yacl3.api.ButtonOption$Builder
+import dev.isxander.yacl3.api.controller.BooleanControllerBuilder
+import dev.isxander.yacl3.api.controller.EnumControllerBuilder
+
+# ── ModMenu ─────────────────────────────────────────────────
+import com.terraformersmc.modmenu.api.ModMenuApi
+import com.terraformersmc.modmenu.api.ConfigScreenFactory

@@ -11,8 +11,15 @@ import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
-public class XaeroDisabledRadarFixerConfigScreen {
-    public static Screen create(Screen parent) {
+/**
+ * 1.21 implementation of config screen builder.
+ * Uses vanilla MC types directly — YACL is compiled against these types
+ * at build time. Version't handles intermediary remapping at runtime.
+ * Override methods in newer version subclasses if YACL API changes.
+ */
+public class ConfigScreenBuilder_1_21 extends ConfigScreenBuilder.Base {
+    @Override
+    protected Screen createScreenImpl(Screen parent) {
         XaeroDisabledRadarFixerConfig config = XaeroDisabledRadarFixerConfig.get();
 
         return YetAnotherConfigLib.createBuilder()
