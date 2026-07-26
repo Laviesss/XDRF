@@ -72,9 +72,11 @@ class ClientPacketListener
     # method_43596 is handleSystemChat signature on ClientPacketListener
     void method_43596/handleSystemChat(ClientboundSystemChatPacket packet)
 
+
 # ── YACL (Yet Another Config Lib) ──────────────────────────
 # Non-MC classes use single-name import (no intermediary prefix)
 import dev.isxander.yacl3.api.YetAnotherConfigLib
+import dev.isxander.yacl3.api.YetAnotherConfigLib$Builder
 import dev.isxander.yacl3.api.ConfigCategory
 import dev.isxander.yacl3.api.ConfigCategory$Builder
 import dev.isxander.yacl3.api.Option
@@ -84,6 +86,65 @@ import dev.isxander.yacl3.api.ButtonOption
 import dev.isxander.yacl3.api.ButtonOption$Builder
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder
+
+# ── Java functional interfaces (needed by YACL method signatures) ────
+import java.util.function.Supplier
+import java.util.function.Consumer
+import java.util.function.Function
+import java.util.function.BiConsumer
+
+# ── YACL class method entries ───────────────────────────────
+# Non-MC classes use "name/name()" format (no intermediary → both sides identical).
+# The generator uses the mojmap (second) name as the Java method name and
+# passes "name/name" to R.RInstance.mthd() / R.RClass.mthd() at runtime.
+# Generic types are erased (Option.Builder<T> → Option$Builder).
+
+class YetAnotherConfigLib
+    static YetAnotherConfigLib$Builder createBuilder/createBuilder()
+    @Nullable Screen generateScreen/generateScreen(Screen parent)
+
+class YetAnotherConfigLib$Builder
+    YetAnotherConfigLib$Builder title/title(Component title)
+    YetAnotherConfigLib$Builder category/category(ConfigCategory category)
+    YetAnotherConfigLib build/build()
+
+class ConfigCategory
+    static ConfigCategory$Builder createBuilder/createBuilder()
+
+class ConfigCategory$Builder
+    ConfigCategory$Builder name/name(Component name)
+    ConfigCategory$Builder option/option(Option option)
+    ConfigCategory build/build()
+
+class Option
+    static Option$Builder createBuilder/createBuilder()
+
+class Option$Builder
+    Option$Builder name/name(Component name)
+    Option$Builder description/description(OptionDescription description)
+    Option$Builder binding/binding(Object defaultValue, Supplier getter, Consumer setter)
+    Option$Builder controller/controller(Function factory)
+    Option build/build()
+
+class ButtonOption
+    static ButtonOption$Builder createBuilder/createBuilder()
+
+class ButtonOption$Builder
+    ButtonOption$Builder name/name(Component name)
+    ButtonOption$Builder description/description(OptionDescription description)
+    ButtonOption$Builder action/action(BiConsumer action)
+    ButtonOption build/build()
+
+class OptionDescription
+    static OptionDescription of/of(Component[] texts)
+
+class BooleanControllerBuilder
+    static BooleanControllerBuilder create/create(Option option)
+    BooleanControllerBuilder coloured/coloured(boolean coloured)
+
+class EnumControllerBuilder
+    static EnumControllerBuilder create/create(Option option)
+    EnumControllerBuilder enumClass/enumClass(Class enumClass)
 
 # ── ModMenu ─────────────────────────────────────────────────
 import com.terraformersmc.modmenu.api.ModMenuApi

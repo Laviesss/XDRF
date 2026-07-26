@@ -1,82 +1,110 @@
 package com.laviesss.xaerodisabledradarfixer.config;
 
 import com.laviesss.xaerodisabledradarfixer.service.XaeroDisabledRadarFixerService;
-import dev.isxander.yacl3.api.ButtonOption;
-import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
-import dev.isxander.yacl3.api.YetAnotherConfigLib;
-import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
-import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import static com.laviesss.xaerodisabledradarfixer.util.XaeroDisabledRadarFixerYaclHelper.*;
 
 /**
  * 1.21 implementation of config screen builder.
- * Uses vanilla MC types directly — YACL is compiled against these types
- * at build time. Version't handles intermediary remapping at runtime.
+ * <p>
+ * All YACL methods that accept vanilla {@code Text} are invoked via
+ * {@link XaeroDisabledRadarFixerYaclHelper} so no MC type references
+ * appear in our bytecode. This prevents crashes on MC 26.2+ where
+ * Fabric Loader has no mappings and intermediary class names don't exist.
+ * <p>
+ * YACL's {@code generateScreen(Screen)} is called via Version't reflection
+ * ({@code R.clz(...).inst(...).mthd(...).invk(...)}) so no MC or YACL type
+ * references appear in our bytecode.
+ * <p>
  * Override methods in newer version subclasses if YACL API changes.
  */
 public class XaeroDisabledRadarFixerConfigScreen_1_21 extends XaeroDisabledRadarFixerConfigScreen.Base {
+
     @Override
-    protected Screen createScreenImpl(Screen parent) {
+    protected Object createScreenImpl(Object parent) {
         XaeroDisabledRadarFixerConfig config = XaeroDisabledRadarFixerConfig.get();
 
-        return YetAnotherConfigLib.createBuilder()
-                .title(Text.literal("Xaero Disabled Radar Fixer"))
-                .category(ConfigCategory.createBuilder()
-                        .name(Text.literal("General"))
+        // ── Title on YetAnotherConfigLib.Builder ──────────────────
+        Object yaclBuilder = createBuilder("dev.isxander.yacl3.api.YetAnotherConfigLib");
+        title(yaclBuilder, "Xaero Disabled Radar Fixer");
 
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Enable Radar Fixer"))
-                                .description(OptionDescription.of(Text.literal("Toggle blocking of server radar-disable messages.")))
-                                .binding(config.isEnabled(), config::isEnabled, config::setEnabled)
-                                .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
-                                .build())
+        // ── Category: General ─────────────────────────────────────
+        Object catBuilder = createBuilder("dev.isxander.yacl3.api.ConfigCategory");
+        name(catBuilder, "General");
 
-                        .option(Option.<XaeroDisabledRadarFixerConfig.BlockingScope>createBuilder()
-                                .name(Text.literal("Blocking Scope"))
-                                .description(OptionDescription.of(Text.literal("What type of radar-disabling attempts to block.")))
-                                .binding(config.getBlockingScope(), config::getBlockingScope, config::setBlockingScope)
-                                .controller(opt -> EnumControllerBuilder.create(opt)
-                                        .enumClass(XaeroDisabledRadarFixerConfig.BlockingScope.class))
-                                .build())
+        // ── Option: Enable Radar Fixer ────────────────────────────
+        Object enableOpt = createBuilder("dev.isxander.yacl3.api.Option");
+        name(enableOpt, "Enable Radar Fixer");
+        desc(enableOpt, "Toggle blocking of server radar-disable messages.");
+        Supplier<Boolean> getEnabled   = config::isEnabled;
+        Consumer<Boolean> setEnabled   = config::setEnabled;
+        binding(enableOpt, config.isEnabled(), getEnabled, setEnabled);
+        controller(enableOpt, booleanControllerFactory());
+        option(catBuilder, build(enableOpt));
 
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Show Chat Message"))
-                                .description(OptionDescription.of(Text.literal("Notify via chat when a radar message or packet is blocked.")))
-                                .binding(config.isShowChatMessage(), config::isShowChatMessage, config::setShowChatMessage)
-                                .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
-                                .build())
+        // ── Option: Blocking Scope ────────────────────────────────
+        Object scopeOpt = createBuilder("dev.isxander.yacl3.api.Option");
+        name(scopeOpt, "Blocking Scope");
+        desc(scopeOpt, "What type of radar-disabling attempts to block.");
+        Supplier<XaeroDisabledRadarFixerConfig.BlockingScope> getScope = config::getBlockingScope;
+        Consumer<XaeroDisabledRadarFixerConfig.BlockingScope> setScope = config::setBlockingScope;
+        binding(scopeOpt, config.getBlockingScope(), getScope, setScope);
+        controller(scopeOpt, enumControllerFactory(XaeroDisabledRadarFixerConfig.BlockingScope.class));
+        option(catBuilder, build(scopeOpt));
 
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Show Toast Notifications"))
-                                .description(OptionDescription.of(Text.literal("Notify via toast when a radar message or packet is blocked.")))
-                                .binding(config.isShowToast(), config::isShowToast, config::setShowToast)
-                                .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
-                                .build())
+        // ── Option: Show Chat Message ─────────────────────────────
+        Object chatOpt = createBuilder("dev.isxander.yacl3.api.Option");
+        name(chatOpt, "Show Chat Message");
+        desc(chatOpt, "Notify via chat when a radar message or packet is blocked.");
+        Supplier<Boolean> getChat   = config::isShowChatMessage;
+        Consumer<Boolean> setChat   = config::setShowChatMessage;
+        binding(chatOpt, config.isShowChatMessage(), getChat, setChat);
+        controller(chatOpt, booleanControllerFactory());
+        option(catBuilder, build(chatOpt));
 
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Verbose Logging"))
-                                .description(OptionDescription.of(Text.literal("Log detailed information about blocked chat messages and packets (for debugging).")))
-                                .binding(config.isVerboseLogging(), config::isVerboseLogging, config::setVerboseLogging)
-                                .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true))
-                                .build())
+        // ── Option: Show Toast Notifications ──────────────────────
+        Object toastOpt = createBuilder("dev.isxander.yacl3.api.Option");
+        name(toastOpt, "Show Toast Notifications");
+        desc(toastOpt, "Notify via toast when a radar message or packet is blocked.");
+        Supplier<Boolean> getToast   = config::isShowToast;
+        Consumer<Boolean> setToast   = config::setShowToast;
+        binding(toastOpt, config.isShowToast(), getToast, setToast);
+        controller(toastOpt, booleanControllerFactory());
+        option(catBuilder, build(toastOpt));
 
-                        .option(ButtonOption.createBuilder()
-                                .name(Text.literal("Enforce Blocking"))
-                                .description(OptionDescription.of(Text.literal("Replay the last blocked radar-disabling code or rules packet — based on what was cached this session.")))
-                                .action((screen, button) -> XaeroDisabledRadarFixerService.enforceBlocking())
-                                .build())
+        // ── Option: Verbose Logging ───────────────────────────────
+        Object verboseOpt = createBuilder("dev.isxander.yacl3.api.Option");
+        name(verboseOpt, "Verbose Logging");
+        desc(verboseOpt, "Log detailed information about blocked chat messages and packets (for debugging).");
+        Supplier<Boolean> getVerbose   = config::isVerboseLogging;
+        Consumer<Boolean> setVerbose   = config::setVerboseLogging;
+        binding(verboseOpt, config.isVerboseLogging(), getVerbose, setVerbose);
+        controller(verboseOpt, booleanControllerFactory());
+        option(catBuilder, build(verboseOpt));
 
-                        .option(ButtonOption.createBuilder()
-                                .name(Text.literal("Revoke Blocking"))
-                                .description(OptionDescription.of(Text.literal("Send the reset code or modified rules packet to undo the server's blocking attempt — based on what was cached this session.")))
-                                .action((screen, button) -> XaeroDisabledRadarFixerService.revokeBlocking())
-                                .build())
+        // ── Button: Enforce Blocking ──────────────────────────────
+        Object enforceBtn = createBuilder("dev.isxander.yacl3.api.ButtonOption");
+        name(enforceBtn, "Enforce Blocking");
+        desc(enforceBtn, "Replay the last blocked radar-disabling code or rules packet \u2014 based on what was cached this session.");
+        action(enforceBtn, (screen, button) -> XaeroDisabledRadarFixerService.enforceBlocking());
+        option(catBuilder, build(enforceBtn));
 
-                        .build())
-                .build()
-                .generateScreen(parent);
+        // ── Button: Revoke Blocking ───────────────────────────────
+        Object revokeBtn = createBuilder("dev.isxander.yacl3.api.ButtonOption");
+        name(revokeBtn, "Revoke Blocking");
+        desc(revokeBtn, "Send the reset code or modified rules packet to undo the server\u2019s blocking attempt \u2014 based on what was cached this session.");
+        action(revokeBtn, (screen, button) -> XaeroDisabledRadarFixerService.revokeBlocking());
+        option(catBuilder, build(revokeBtn));
+
+        // ── Build ─────────────────────────────────────────────────
+        category(yaclBuilder, build(catBuilder));
+        Object yaclScreen = build(yaclBuilder);
+
+        // generateScreen(Screen) called via Version't reflection — no Screen in our bytecode.
+        // parent is a vanilla Screen at runtime; YACL expects vanilla Screen.
+        return generateScreen(yaclScreen, parent);
     }
 }

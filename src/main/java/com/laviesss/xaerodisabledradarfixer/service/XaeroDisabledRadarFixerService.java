@@ -11,8 +11,6 @@ import dev.gxlg.versiont.gen.net.minecraft.client.multiplayer.ClientPacketListen
 import dev.gxlg.versiont.gen.net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import dev.gxlg.versiont.gen.net.minecraft.network.chat.Component;
 
-import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
-
 import java.lang.reflect.Field;
 
 public final class XaeroDisabledRadarFixerService {
@@ -203,14 +201,6 @@ public final class XaeroDisabledRadarFixerService {
         } catch (Exception e) {
             XaeroDisabledRadarFixerClientMod.LOGGER.warn("[XDRF] Could not record blocked chat message", e);
         }
-    }
-
-    public static boolean shouldBlockChatMessage(GameMessageS2CPacket packet) {
-        return shouldBlockChatMessage(R.wrapperInst(ClientboundSystemChatPacket.class, packet));
-    }
-
-    public static void recordBlockedChatMessage(GameMessageS2CPacket packet) {
-        recordBlockedChatMessage(R.wrapperInst(ClientboundSystemChatPacket.class, packet));
     }
 
     public static boolean shouldBlockPacketRules(Object packet) {

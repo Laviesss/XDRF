@@ -59,7 +59,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.100.1+1.21"
     modImplementation "dev.isxander:yet-another-config-lib:3.6.2+1.21-fabric"
     modImplementation "com.terraformersmc:modmenu:11.0.0"
-    modImplementation "dev.gxlg:versiont-library:1.2.3"  // NOT included (no jar-in-jar) — users install Version't separately
+    modImplementation "dev.gxlg:versiont-library:1.2.4"  // NOT included (no jar-in-jar) — users install Version't separately
 }
 
 configurations.all {
@@ -83,6 +83,32 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.named("sourcesJar") {
     dependsOn(tasks.named("versiontLayer"))
+}
+
+// Fix Version't generator inner class cast bug:
+// Generator emits JVM bytecode $ notation (Outer$Inner) in fully-qualified casts,
+// but Java source requires dot notation (Outer.Inner).
+// This post-processes generated .java files to fix only fully-qualified cast expressions.
+tasks.named("versiontLayer") {
+    doLast {
+        def genDir = layout.buildDirectory.dir("generated/sources/versiont/java").get().asFile
+        if (genDir.exists()) {
+            genDir.eachDirRecurse { dir ->
+                dir.listFiles()?.findAll { it.name.endsWith('.java') }?.each { file ->
+                    def content = file.text
+                    // Fix fully-qualified casts with inner classes: (pkg.Outer$Inner) → (pkg.Outer.Inner)
+                    def fixed = content.replaceAll(
+                        /\(([a-z][\w]*(?:\.[\w]+)+)\$([\w]+)\)/,
+                        '($1.$2)'
+                    )
+                    if (fixed != content) {
+                        file.text = fixed
+                        println "Fixed inner class casts in: ${file.name}"
+                    }
+                }
+            }
+        }
+    }
 }
 
 // Ensure remapJar runs as part of build so the output jar has intermediary mappings
