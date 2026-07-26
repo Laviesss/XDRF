@@ -10,7 +10,7 @@ buildscript {
 plugins {
     id 'fabric-loom' version '1.17.16'
     id 'maven-publish'
-    id 'dev.gxlg.versiont-toolchain' version '1.3.4'
+    id 'dev.gxlg.versiont-toolchain' version '1.3.6'
 }
 
 apply plugin: 'dev.mixinmcp.decompile'
@@ -84,6 +84,7 @@ tasks.withType(JavaCompile).configureEach {
 tasks.named("sourcesJar") {
     dependsOn(tasks.named("versiontLayer"))
 }
+
 
 // Fix Version't generator inner class cast bug:
 // Generator emits JVM bytecode $ notation (Outer$Inner) in fully-qualified casts,

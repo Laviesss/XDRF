@@ -10,12 +10,11 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Version't-based helpers for YACL config screen creation.
+ * Version't helpers for YACL config screen creation.
  * <p>
- * All YACL class resolution and method invocation goes through Version't
- * ({@code R.clz(...).mthd(...).invk(...)}) — no manual {@code Class.forName()}
- * or {@code Method.invoke()} calls. This follows the same pattern as
- * {@link XaeroDisabledRadarFixerTextHelper}.
+ * All YACL class constants are resolved via Version't ({@code R.clz(...)})
+ * and every method uses Version't's {@code .inst().mthd().invk()} chain.
+ * No {@code java.lang.reflect.Method} is used for YACL method calls.
  * <p>
  * YACL types are resolved via Version't at runtime — no direct import
  * references to {@code dev.isxander.yacl3.*} appear in our bytecode.
@@ -26,6 +25,9 @@ public class XaeroDisabledRadarFixerYaclHelper {
     // ── YACL class name constants (single-name format for non-MC) ──────
 
     private static final String YACL        = "dev.isxander.yacl3.api.YetAnotherConfigLib";
+    private static final String CONFIG_CAT  = "dev.isxander.yacl3.api.ConfigCategory";
+    private static final String BTN_OPT     = "dev.isxander.yacl3.api.ButtonOption";
+    private static final String OPTION      = "dev.isxander.yacl3.api.Option$Builder";
     private static final String OPTION_DESC = "dev.isxander.yacl3.api.OptionDescription";
     private static final String BOOL_CTRL   = "dev.isxander.yacl3.api.controller.BooleanControllerBuilder";
     private static final String ENUM_CTRL   = "dev.isxander.yacl3.api.controller.EnumControllerBuilder";
@@ -53,7 +55,8 @@ public class XaeroDisabledRadarFixerYaclHelper {
         String className = obj.getClass().getName();
         if (className.startsWith("dev.gxlg.versiont.gen.")) {
             try {
-                return obj.getClass().getMethod("unwrap").invoke(obj);
+                java.lang.reflect.Method unwrapMethod = obj.getClass().getMethod("unwrap");
+                return unwrapMethod.invoke(obj);
             } catch (Throwable e) {
                 throw new RuntimeException("Failed to unwrap Version't wrapper: " + className, e);
             }
@@ -86,31 +89,6 @@ public class XaeroDisabledRadarFixerYaclHelper {
         }
     }
 
-    // ── Generic YACL text-method invocation ─────────────────────────────
-
-    /**
-     * Invokes a YACL builder method that accepts a single vanilla {@code Text}
-     * parameter — {@code title}, {@code name}, etc.
-     * <p>
-     * Unwraps the text object before passing it to YACL (YACL always expects
-     * raw MC objects, never Version't wrappers).
-     */
-    @SuppressWarnings("unchecked")
-    private static <T> T callYaclText(T builder, String methodName, Object textObj) {
-        try {
-            Object rawText = unwrapIfWrapper(textObj);
-            R.RClass builderClass = R.clz(builder.getClass().getName());
-            return (T) builderClass
-                    .inst(builder)
-                    .mthd(methodName + "/" + methodName,
-                            builderClass.self(),
-                            Component.clazz.self())
-                    .invk(rawText);
-        } catch (Throwable e) {
-            throw new RuntimeException("Failed to invoke " + methodName + "()", e);
-        }
-    }
-
     // ── Static factory methods ──────────────────────────────────────────
 
     /**
@@ -118,51 +96,97 @@ public class XaeroDisabledRadarFixerYaclHelper {
      * <p>
      * Works for {@code YetAnotherConfigLib}, {@code ConfigCategory},
      * {@code Option}, and {@code ButtonOption} — the caller passes the
-     * fully-qualified class name and gets back a raw builder object.
+     * single-name class name (e.g. {@code "YetAnotherConfigLib"}) and
+     * gets back a raw builder object.
      */
-    public static Object createBuilder(String fullyQualifiedClassName) {
+    public static Object createBuilder(String builderSimpleName) {
         try {
-            R.RClass cls = R.clz(fullyQualifiedClassName);
+            // Map single name to fully-qualified class name for R.clz()
+            String fqcn;
+            switch (builderSimpleName) {
+                case "YetAnotherConfigLib": fqcn = YACL; break;
+                case "ConfigCategory":      fqcn = CONFIG_CAT; break;
+                case "Option":              fqcn = "dev.isxander.yacl3.api.Option"; break;
+                case "ButtonOption":        fqcn = BTN_OPT; break;
+                default: throw new IllegalArgumentException("Unknown builder: " + builderSimpleName);
+            }
+            // createBuilder() is a static method on the outer class
+            R.RClass cls = R.clz(fqcn);
             return cls
-                    .mthd("createBuilder/createBuilder", cls.self())
+                    .mthd("createBuilder/createBuilder")
                     .invk();
         } catch (Throwable e) {
-            throw new RuntimeException("Failed to create builder: " + fullyQualifiedClassName, e);
+            throw new RuntimeException("Failed to create builder: " + builderSimpleName, e);
         }
     }
 
     // ── Convenience: title / name ───────────────────────────────────────
 
     /**
-     * Sets the title on a {@code YetAnotherConfigLib.Builder}.
+     * Sets the title on a {@code YetAnotherConfigLib.Builder} via Version't.
      */
-    public static <T> T title(T builder, String content) {
-        return callYaclText(builder, "title", text(content));
+    public static Object title(Object builder, String content) {
+        try {
+            R.RClass builderClass = R.clz(YACL + "$Builder");
+            Object rawText = unwrapIfWrapper(text(content));
+            return builderClass
+                    .inst(builder)
+                    .mthd("title/title", builderClass.self(), Component.clazz.self())
+                    .invk(rawText);
+        } catch (Throwable e) {
+            throw new RuntimeException("Failed to invoke title()", e);
+        }
     }
 
     /**
-     * Sets the name on any YACL builder (category, option, button).
+     * Sets the name on any YACL builder (category, option, button) via Version't.
+     * <p>
+     * Tries each known builder type until one matches the runtime class.
      */
     public static Object name(Object builder, String content) {
-        return callYaclText(builder, "name", text(content));
+        try {
+            Object rawText = unwrapIfWrapper(text(content));
+            for (String cls : new String[]{CONFIG_CAT + "$Builder", BTN_OPT + "$Builder", OPTION}) {
+                try {
+                    R.RClass builderClass = R.clz(cls);
+                    builderClass.self().cast(builder);
+                    return builderClass
+                            .inst(builder)
+                            .mthd("name/name", builderClass.self(), Component.clazz.self())
+                            .invk(rawText);
+                } catch (ClassCastException ignored) {}
+            }
+            throw new RuntimeException("Unknown builder type for name(): " + builder.getClass().getName());
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Throwable e) {
+            throw new RuntimeException("Failed to invoke name()", e);
+        }
     }
 
     // ── Convenience: description ────────────────────────────────────────
 
     /**
      * Sets the description on any YACL builder
-     * via {@code builder.description(OptionDescription.of(text))}.
+     * via {@code builder.description(OptionDescription.of(text))} using Version't.
      */
     public static Object desc(Object builder, String content) {
         try {
-            Object descObj = optionDesc(text(content));
-            R.RClass builderClass = R.clz(builder.getClass().getName());
-            return builderClass
-                    .inst(builder)
-                    .mthd("description/description",
-                            builderClass.self(),
-                            R.clz(OPTION_DESC).self())
-                    .invk(descObj);
+            Object descObj = unwrapIfWrapper(optionDesc(text(content)));
+            R.RClass descType = R.clz(OPTION_DESC);
+            for (String cls : new String[]{BTN_OPT + "$Builder", OPTION}) {
+                try {
+                    R.RClass builderClass = R.clz(cls);
+                    builderClass.self().cast(builder);
+                    return builderClass
+                            .inst(builder)
+                            .mthd("description/description", builderClass.self(), descType.self())
+                            .invk(descObj);
+                } catch (ClassCastException ignored) {}
+            }
+            throw new RuntimeException("Unknown builder type for desc(): " + builder.getClass().getName());
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Throwable e) {
             throw new RuntimeException("Failed to invoke description()", e);
         }
@@ -173,13 +197,12 @@ public class XaeroDisabledRadarFixerYaclHelper {
     /**
      * Calls {@code builder.binding(defaultValue, getter, setter)} via Version't.
      * <p>
-     * Uses raw {@code Object} params — callers cast method references to the
-     * correct functional interface ({@code Supplier<T>}, {@code Consumer<T>}).
+     * Only called on Option$Builder. At bytecode level the generic T erases to Object.
      */
     public static Object binding(Object builder, Object defaultValue,
                                   Object getter, Object setter) {
         try {
-            R.RClass builderClass = R.clz(builder.getClass().getName());
+            R.RClass builderClass = R.clz(OPTION);
             return builderClass
                     .inst(builder)
                     .mthd("binding/binding",
@@ -197,10 +220,11 @@ public class XaeroDisabledRadarFixerYaclHelper {
 
     /**
      * Calls {@code builder.controller(function)} via Version't.
+     * Only called on Option$Builder.
      */
     public static Object controller(Object builder, Object function) {
         try {
-            R.RClass builderClass = R.clz(builder.getClass().getName());
+            R.RClass builderClass = R.clz(OPTION);
             return builderClass
                     .inst(builder)
                     .mthd("controller/controller",
@@ -225,12 +249,11 @@ public class XaeroDisabledRadarFixerYaclHelper {
                 R.RClass ctrlClass = R.clz(BOOL_CTRL);
                 Object rawOpt = unwrapIfWrapper(opt);
                 Object cbc = ctrlClass
-                        .mthd("create/create", ctrlClass.self())
+                        .mthd("create/create", ctrlClass.self(), Object.class)
                         .invk(rawOpt);
-                R.RClass cbcClass = R.clz(cbc.getClass().getName());
-                return cbcClass
+                return ctrlClass
                         .inst(cbc)
-                        .mthd("coloured/coloured", cbcClass.self(), boolean.class)
+                        .mthd("coloured/coloured", ctrlClass.self(), boolean.class)
                         .invk(true);
             } catch (Throwable e) {
                 throw new RuntimeException("Failed to create boolean controller", e);
@@ -250,12 +273,11 @@ public class XaeroDisabledRadarFixerYaclHelper {
                 R.RClass ctrlClass = R.clz(ENUM_CTRL);
                 Object rawOpt = unwrapIfWrapper(opt);
                 Object ec = ctrlClass
-                        .mthd("create/create", ctrlClass.self())
+                        .mthd("create/create", ctrlClass.self(), Object.class)
                         .invk(rawOpt);
-                R.RClass ecClass = R.clz(ec.getClass().getName());
-                ecClass
+                ctrlClass
                         .inst(ec)
-                        .mthd("enumClass/enumClass", ecClass.self(), Class.class)
+                        .mthd("enumClass/enumClass", ctrlClass.self(), Class.class)
                         .invk(enumClass);
                 return ec;
             } catch (Throwable e) {
@@ -268,14 +290,23 @@ public class XaeroDisabledRadarFixerYaclHelper {
 
     /**
      * Calls {@code builder.build()} via Version't.
+     * Tries each known builder type until one matches.
      */
     public static Object build(Object builder) {
         try {
-            R.RClass builderClass = R.clz(builder.getClass().getName());
-            return builderClass
-                    .inst(builder)
-                    .mthd("build/build", builderClass.self())
-                    .invk();
+            for (String cls : new String[]{YACL + "$Builder", CONFIG_CAT + "$Builder", BTN_OPT + "$Builder", OPTION}) {
+                try {
+                    R.RClass builderClass = R.clz(cls);
+                    builderClass.self().cast(builder);
+                    return builderClass
+                            .inst(builder)
+                            .mthd("build/build")
+                            .invk();
+                } catch (ClassCastException ignored) {}
+            }
+            throw new RuntimeException("Unknown builder type for build(): " + builder.getClass().getName());
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Throwable e) {
             throw new RuntimeException("Failed to invoke build()", e);
         }
@@ -287,7 +318,7 @@ public class XaeroDisabledRadarFixerYaclHelper {
      */
     public static Object option(Object catBuilder, Object opt) {
         try {
-            R.RClass builderClass = R.clz(catBuilder.getClass().getName());
+            R.RClass builderClass = R.clz(CONFIG_CAT + "$Builder");
             return builderClass
                     .inst(catBuilder)
                     .mthd("option/option", builderClass.self())
@@ -303,7 +334,7 @@ public class XaeroDisabledRadarFixerYaclHelper {
      */
     public static Object category(Object yaclBuilder, Object cat) {
         try {
-            R.RClass builderClass = R.clz(yaclBuilder.getClass().getName());
+            R.RClass builderClass = R.clz(YACL + "$Builder");
             return builderClass
                     .inst(yaclBuilder)
                     .mthd("category/category", builderClass.self())
@@ -319,7 +350,7 @@ public class XaeroDisabledRadarFixerYaclHelper {
      */
     public static Object action(Object btnBuilder, BiConsumer<Object, Object> biConsumer) {
         try {
-            R.RClass builderClass = R.clz(btnBuilder.getClass().getName());
+            R.RClass builderClass = R.clz(BTN_OPT + "$Builder");
             return builderClass
                     .inst(btnBuilder)
                     .mthd("action/action",
