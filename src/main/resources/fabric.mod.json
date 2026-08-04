@@ -16,8 +16,13 @@
     "environment": "client",
 
     "entrypoints": {
-        "client": ["com.laviesss.xaerodisabledradarfixer.XaeroDisabledRadarFixerClientMod"],
-        "modmenu": ["com.laviesss.xaerodisabledradarfixer.XaeroDisabledRadarFixerModMenu"]
+        "client": ["com.laviesss.xaerodisabledradarfixer.XaeroDisabledRadarFixer"],
+        "modmenu": [
+          {
+            "adapter": "versiont+modmenu",
+            "value": "com.laviesss.xaerodisabledradarfixer.ModMenuEntrypoint"
+          }
+        ]
     },
 
     "mixins": ["mixins.xaerodisabledradarfixer.json"],
@@ -27,6 +32,6 @@
         "minecraft": ">=1.21 <=26.2",
         "modmenu": "*",
         "yet_another_config_lib_v3": ">=3.6.2",
-        "versiont": ">=1.2.3"
+        "versiont": "~1.3.2"
     }
 }
