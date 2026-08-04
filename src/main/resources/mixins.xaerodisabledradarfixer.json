@@ -4,9 +4,9 @@
   "package": "com.laviesss.xaerodisabledradarfixer.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "XaeroDisabledRadarFixerMixin_Obf",
-    "XaeroDisabledRadarFixerMixin_Deobf",
-    "XaeroDisabledRadarFixerRulesMixin"
+    "entry.ClientPacketListenerMixinEntry_Obf",
+    "entry.ClientPacketListenerMixinEntry_Deobf",
+    "entry.XaeroMixinEntry"
   ],
   "injectors": {
     "defaultRequire": 1
