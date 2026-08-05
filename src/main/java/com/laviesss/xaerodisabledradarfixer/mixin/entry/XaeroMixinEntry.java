@@ -19,7 +19,7 @@ public class XaeroMixinEntry {
     )
     private void accept(@Coerce Object message, CallbackInfo ci) {
         ClientboundRulesPacket packet = R.wrapperInst(ClientboundRulesPacket.class, message);
-        ClientboundRulesPacket$ClientHandler handler = (ClientboundRulesPacket$ClientHandler) (Object) this;
+        ClientboundRulesPacket$ClientHandler handler = R.wrapperInst(ClientboundRulesPacket$ClientHandler.class, this);
         if (XaeroMixinImpl.accept(packet, handler)) {
             ci.cancel();
         }
