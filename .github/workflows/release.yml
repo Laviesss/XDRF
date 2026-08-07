@@ -85,7 +85,7 @@ jobs:
               $body = if ($lines.Count -gt 0) { "## What's Changed (since $prev)`n$($lines -join "`n")" } else { "## What's Changed`n- Maintenance and stability improvements." }
             } else { $body = "## Initial Release" }
           }
-          $body += "`n---`n### Requirements`n| | |`n|---|---|`n| **Minecraft** | 1.21 - 1.21.x |`n| **Mod Loader** | Fabric |`n| **Dependencies** | Fabric API, YACL, ModMenu |"
+          $body += "`n---`n### Requirements`n| | |`n|---|---|`n| **Minecraft** | 1.21 through 26.2 |`n| **Mod Loader** | Fabric |`n| **Dependencies** | Fabric API, YACL, ModMenu, Version't |"
           "BODY<<EOF" >> $env:GITHUB_OUTPUT
           $body >> $env:GITHUB_OUTPUT
           "EOF" >> $env:GITHUB_OUTPUT
