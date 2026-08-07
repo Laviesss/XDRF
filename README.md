@@ -17,6 +17,7 @@ Some Minecraft servers send hidden/obfuscated chat messages or enforce plugin-ch
 - **Blocking Scope** — choose to block chat messages only, packets only, or both (default: both)
 - **Toast notifications** — optional pop-up alert when a radar-disabling attempt is blocked
 - **Chat notifications** — optional in-game chat message when something is blocked
+- **Sound notification** — optional sound effect when a radar-disabling attempt is blocked
 - **Enforce Blocking** — replay the last blocked code or packet (useful if moderators ask for minimap proof)
 - **Revoke Blocking** — send a reset code to undo the server's disable attempt
 - **Verbose Logging** — detailed console logging for debugging blocked messages and packets
@@ -28,7 +29,7 @@ Some Minecraft servers send hidden/obfuscated chat messages or enforce plugin-ch
 
 | | |
 |---|---|
-| **Minecraft** | 1.21 through 26.2+ |
+| **Minecraft** | 1.21 through 26.2 |
 | **Mod Loader** | Fabric (requires Fabric Loader >= 0.15.0) |
 | **Platform** | Client-side only — not needed on servers |
 | **Xaero's Mods** | Minimap, World Map, and XaeroPlus |
@@ -48,7 +49,7 @@ Install these **before** using XDRF:
 | [Xaero's Minimap](https://modrinth.com/mod/xaeros-minimap) or [World Map](https://modrinth.com/mod/xaeros-world-map) | Any version for your MC version | No |
 | [Mod Menu](https://modrinth.com/mod/modmenu) | Any version for your MC version | No |
 | [YACL (Yet Another Config Lib)](https://modrinth.com/mod/yacl) | >= 3.6.2 | No |
-| [Version't](https://modrinth.com/mod/versiont) | >= 1.2.3 | **No** — must be installed separately |
+| [Version't](https://modrinth.com/mod/versiont) | >= 1.3.2 | **No** — must be installed separately |
 
 ---
 
@@ -68,6 +69,7 @@ Open ModMenu, find **Xaero Disabled Radar Fixer** in the mod list, and click the
 | Blocking Scope | Both | What to block: Chat Message, Packet, or Both |
 | Show Chat Message | On | Notify via chat when something is blocked |
 | Show Toast Notifications | On | Notify via toast when something is blocked |
+| Play Sound Notification | On | Play a sound when something is blocked |
 | Verbose Logging | Off | Log detailed info about blocked items (debugging) |
 | Enforce Blocking | — | Button: replay last blocked code or packet |
 | Revoke Blocking | — | Button: send reset code to undo server's disable |
@@ -96,7 +98,7 @@ The compiled jar lands in `build/libs/`.
 | Workflow | Triggers | What it does |
 |---|---|---|
 | [build.yml](.github/workflows/build.yml) | Push / PR to `main` | Compiles, caches Gradle + Loom, uploads dev jar as artifact |
-| [release.yml](.github/workflows/release.yml) | Tag `v*` or `workflow_dispatch` | Builds, signs, publishes GitHub Release with jar + SHA-256 checksums |
+| [release.yml](.github/workflows/release.yml) | Tag `v*` or `workflow_dispatch` | Builds, publishes GitHub Release with jar + SHA-256 checksums |
 
 **Versioning:** Releases are tagged `vX.Y.Z`. Push a tag to trigger the release workflow:
 
@@ -112,7 +114,7 @@ git push origin v1.0.1
 - Client-side only — does not interfere with server operations
 - Will violate server rules that prohibit radar use — use with discretion
 - Lightweight — no gameplay or performance impact
-- Single jar works across MC 1.21 through 26.2+ thanks to Version't cross-version support
+- Single jar works across MC 1.21 through 26.2 thanks to Version't cross-version support
 
 ---
 
