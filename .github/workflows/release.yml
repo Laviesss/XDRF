@@ -80,10 +80,12 @@ jobs:
                   $types = @{feat='Features';fix='Bug Fixes';docs='Documentation';refactor='Refactoring';chore='Chores';ci='CI/CD';test='Tests';perf='Performance';build='Build'}
                   if ($type -ne $currentType) { $currentType=$type; $lines += "`n### $($types[$type])" }
                   $lines += "- $desc"
-                } else { $lines += "- $msg" }
+                }
               }
               $body = if ($lines.Count -gt 0) { "## What's Changed (since $prev)`n$($lines -join "`n")" } else { "## What's Changed`n- Maintenance and stability improvements." }
             } else { $body = "## Initial Release" }
+            $highlights = "### Highlights`n- **Version't-powered since v2.x** - one jar covers Minecraft 1.21 through 26.2 without recompilation`n- **Full radar protection** - blocks hidden chat codes and plugin-channel rules packets that disable Xaero's radar"
+            $body = "$highlights`n`n$body"
           }
           $body += "`n---`n### Requirements`n| | |`n|---|---|`n| **Minecraft** | 1.21 through 26.2 |`n| **Mod Loader** | Fabric |`n| **Dependencies** | Fabric API, YACL, ModMenu, Version't |"
           "BODY<<EOF" >> $env:GITHUB_OUTPUT
@@ -137,6 +139,10 @@ jobs:
         with:
           name: mod-jar
           path: release-assets
+
+      - name: Exclude sources jar from release
+        shell: bash
+        run: rm -f release-assets/*-sources.jar
 
       - name: Generate SHA-256 checksums
         shell: bash
