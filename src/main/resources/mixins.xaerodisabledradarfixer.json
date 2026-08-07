@@ -1,12 +1,12 @@
 {
   "required": true,
   "plugin": "dev.gxlg.versiont.mixins.VersiontMixinPlugin",
-  "package": "com.laviesss.xaerodisabledradarfixer.mixin",
+  "package": "com.laviesss.xaerodisabledradarfixer.mixin.entry",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "XaeroDisabledRadarFixerMixin_Obf",
-    "XaeroDisabledRadarFixerMixin_Deobf",
-    "XaeroDisabledRadarFixerRulesMixin"
+    "ClientPacketListenerMixinEntry_Obf",
+    "ClientPacketListenerMixinEntry_Deobf",
+    "XaeroMixinEntry"
   ],
   "injectors": {
     "defaultRequire": 1

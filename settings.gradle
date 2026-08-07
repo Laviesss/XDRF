@@ -1,23 +1,8 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
         maven { url = 'https://maven.fabricmc.net/' }
-        maven { url = 'https://maven.terraformersmc.com/' }
-        maven { url = 'https://maven.isxander.dev/releases' }
-        maven { url = 'https://gxlg.github.io/maven-repo/' }
-        // mixinmcp plugin
-        maven { url = 'https://maven.muon.rip/releases' }
-    }
-}
-
-dependencyResolutionManagement {
-    repositories {
         mavenCentral()
-        maven { url = 'https://maven.fabricmc.net/' }
-        maven { url = 'https://maven.terraformersmc.com/' }
-        maven { url = 'https://maven.isxander.dev/releases' }
+        gradlePluginPortal()
         maven { url = 'https://gxlg.github.io/maven-repo/' }
     }
 }
-
-rootProject.name = 'XaeroDisabledRadarFixer'

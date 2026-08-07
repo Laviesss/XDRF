@@ -1,151 +1,196 @@
-# ============================================================
-# Version't mapping for XDRF (Xaero Disabled Radar Fixer)
-# Pattern follows the libr-getter reference by the version't creator:
-# https://github.com/gXLg/libr-getter/blob/master/src/main/resources/versiont.mapping
-#
-# Convention from that reference:
-#   1. Class imports: intermediary_name/mojmap_runtime_fqn[/extras]
-#      Class.forName tries each path in order; takes first match.
-#   2. Method/field entries: intermediary_name/mojmap_name
-#      The mojmap name is the wrapper-exposed Java method/field name AND
-#      the primary runtime reflection target. Intermediary is the fallback.
-#   3. Mojmap is used throughout for consistency across 1.17 → 26.x.
-#
-# All entries verified against the libr-getter reference facts and
-# Minecraft Dev MCP CLI cross-checks.
-# ============================================================
-
-# ── Core ────────────────────────────────────────────────────
-import net.minecraft.class_310/net.minecraft.client.Minecraft
-import net.minecraft.class_746/net.minecraft.client.player.LocalPlayer
-import net.minecraft.class_2561/net.minecraft.network.chat.Component
-import net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent
-import net.minecraft.class_124/net.minecraft.ChatFormatting
-import net.minecraft.class_374/net.minecraft.client.gui.components.toasts.ToastManager
-import net.minecraft.class_329/net.minecraft.client.gui.Gui
-import net.minecraft.class_437/net.minecraft.client.gui.screens.Screen
-import net.minecraft.class_7439/net.minecraft.network.packet.s2c.play.GameMessageS2CPacket/net.minecraft.network.protocol.game.ClientboundSystemChatPacket
-import net.minecraft.class_634/net.minecraft.client.network.ClientPlayNetworkHandler/net.minecraft.client.multiplayer.ClientPacketListener
-
-class Minecraft
-    static Minecraft method_1551/getInstance()
-    @Nullable LocalPlayer field_1724/player
-    ToastManager method_1566/getToastManager()
-    @Nullable ClientPacketListener method_1562/getNetworkHandler()
-    @Nullable Gui gui
-
-class LocalPlayer
-    # method_7353 verified by MCP on Player as displayClientMessage
-    # 26.x renamed: sendSystemMessage / sendOverlayMessage take its place
-    void method_7353/displayClientMessage(Component text, boolean overlay)
-    # 26.1+
-    void sendSystemMessage(Component text)
-    void sendOverlayMessage(Component text)
-
-class Component
-    # nullToEmpty is method_30163 — verified on Component interface
-    static Component method_30163/nullToEmpty(String text)
-
-class MutableComponent
-    # literal is method_43470 — verified return type is MutableComponent on static Component.literal()
-    static MutableComponent method_43470/literal(String content)
-    # withStyle(ChatFormatting) is method_27692 — matches libr-getter EXACTLY
-    MutableComponent method_27692/withStyle(ChatFormatting formatting)
-
-class ChatFormatting
-    static final ChatFormatting field_1064/DARK_PURPLE
-
-class Gui
-    # 26.x only: Gui.toastManager() returns ToastManager
-    ToastManager toastManager/toastManager()
-
-class ToastManager
-    # marker (1.21.11 runtime type)
-
-class ClientboundSystemChatPacket
-    # 1.21.11 record `public record ClientboundSystemChatPacket(Component content, boolean overlay)`
-    # content() is the canonical record accessor (mojmap), also first mojmap half.
-    Component method_11776/content()
-    <init>(Component content, boolean overlay)
-
-class ClientPacketListener
-    # method_43596 is handleSystemChat signature on ClientPacketListener
-    void method_43596/handleSystemChat(ClientboundSystemChatPacket packet)
-
-
-# ── YACL (Yet Another Config Lib) ──────────────────────────
-# Non-MC classes use single-name import (no intermediary prefix)
-import dev.isxander.yacl3.api.YetAnotherConfigLib
-import dev.isxander.yacl3.api.YetAnotherConfigLib$Builder
-import dev.isxander.yacl3.api.ConfigCategory
-import dev.isxander.yacl3.api.ConfigCategory$Builder
-import dev.isxander.yacl3.api.Option
-import dev.isxander.yacl3.api.Option$Builder
-import dev.isxander.yacl3.api.OptionDescription
-import dev.isxander.yacl3.api.ButtonOption
-import dev.isxander.yacl3.api.ButtonOption$Builder
-import dev.isxander.yacl3.api.controller.BooleanControllerBuilder
-import dev.isxander.yacl3.api.controller.EnumControllerBuilder
-
-# ── Java functional interfaces (needed by YACL method signatures) ────
+# --------------------
+# Java
+# --------------------
 import java.util.function.Supplier
 import java.util.function.Consumer
 import java.util.function.Function
 import java.util.function.BiConsumer
 
-# ── YACL class method entries ───────────────────────────────
-# Non-MC classes use "name/name()" format (no intermediary → both sides identical).
-# The generator uses the mojmap (second) name as the Java method name and
-# passes "name/name" to R.RInstance.mthd() / R.RClass.mthd() at runtime.
-# Generic types are erased (Option.Builder<T> → Option$Builder).
+
+adapter java.util.function.Function -> com.laviesss.xaerodisabledradarfixer.util.adapters.FunctionAdapter
+adapter java.util.function.BiConsumer -> com.laviesss.xaerodisabledradarfixer.util.adapters.BiConsumerAdapter
+
+# --------------------
+# Core
+# --------------------
+import net.minecraft.class_310/net.minecraft.client.Minecraft
+import net.minecraft.class_1937/net.minecraft.world.level.Level
+import net.minecraft.class_638/net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.class_1297/net.minecraft.world.entity.Entity
+import net.minecraft.class_746/net.minecraft.client.player.LocalPlayer
+
+class Minecraft
+    static Minecraft method_1551/getInstance()
+    @Nullable LocalPlayer field_1724/player
+    @Nullable ClientLevel field_1687/level
+    ToastManager method_1566/getToastManager()
+    Gui gui
+
+class Entity
+    double method_23317/getX()
+    double method_23318/getY()
+    double method_23321/getZ()
+
+class LocalPlayer extends Entity
+    void method_7353/displayClientMessage(Component message, boolean actionBar)
+    # 26.1
+    void sendSystemMessage(Component message)
+
+class Level
+    void method_8486/playLocalSound(double x, double y, double z, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay)
+
+class ClientLevel extends Level
+
+# --------------------
+# GUI
+# --------------------
+import net.minecraft.class_437/net.minecraft.client.gui.screens.Screen
+import !net.minecraft.client.gui.Gui
+import net.minecraft.class_374/net.minecraft.client.gui.components.toasts.ToastManager
+import net.minecraft.class_370/net.minecraft.client.gui.components.toasts.SystemToast
+import net.minecraft.class_370$class_9037/net.minecraft.client.gui.components.toasts.SystemToast$SystemToastId
+
+class Screen
+
+class Gui
+    ToastManager toastManager()
+
+class ToastManager
+
+class SystemToast
+    static void method_27024/add(ToastManager manager, SystemToast$SystemToastId type, Component title, Component message)
+
+    class SystemToast$SystemToastId
+        static final SystemToast$SystemToastId field_47584/WORLD_BACKUP
+
+# --------------------
+# Text
+# --------------------
+import net.minecraft.class_2561/net.minecraft.network.chat.Component
+import net.minecraft.class_5250/net.minecraft.network.chat.MutableComponent
+import net.minecraft.class_124/net.minecraft.ChatFormatting
+
+class Component
+    static Component method_30163/nullToEmpty(String text)
+    MutableComponent method_27662/plainCopy()
+    String getString()
+
+class MutableComponent extends Component
+    MutableComponent method_27692/withStyle(ChatFormatting formatting)
+
+class ChatFormatting
+    static final ChatFormatting field_1064/DARK_PURPLE
+
+# --------------------
+# Networking
+# --------------------
+import net.minecraft.class_7439/net.minecraft.network.protocol.game.ClientboundSystemChatPacket
+import net.minecraft.class_634/net.minecraft.client.multiplayer.ClientPacketListener
+
+class ClientboundSystemChatPacket
+    <init>(Component content, boolean remote)
+    Component comp_763/content()
+
+class ClientPacketListener
+    void method_43596/handleSystemChat(ClientboundSystemChatPacket packet)
+
+# --------------------
+# Sounds
+# --------------------
+import net.minecraft.class_3417/net.minecraft.sounds.SoundEvents
+import net.minecraft.class_3414/net.minecraft.sounds.SoundEvent
+import net.minecraft.class_3419/net.minecraft.sounds.SoundSource
+
+class SoundEvents
+    static final SoundEvent field_19152/VILLAGER_CELEBRATE
+
+class SoundSource
+    static final SoundSource field_15254/NEUTRAL
+
+# --------------------
+# Fabric
+# --------------------
+import net.fabricmc.fabric.api.networking.v1.PacketSender
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Join
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents$Disconnect
+
+interface ClientPlayConnectionEvents$Join
+    void onPlayReady(ClientPacketListener handler, PacketSender sender, Minecraft client)
+
+interface ClientPlayConnectionEvents$Disconnect
+    void onPlayDisconnect(ClientPacketListener handler, Minecraft client)
+
+# --------------------
+# YACL
+# --------------------
+import !dev.isxander.yacl3.api.YetAnotherConfigLib
+import !dev.isxander.yacl3.api.YetAnotherConfigLib$Builder
+import !dev.isxander.yacl3.api.ConfigCategory
+import !dev.isxander.yacl3.api.ConfigCategory$Builder
+import !dev.isxander.yacl3.api.Option
+import !dev.isxander.yacl3.api.Option$Builder
+import !dev.isxander.yacl3.api.OptionDescription
+import !dev.isxander.yacl3.api.OptionDescription$Builder
+import !dev.isxander.yacl3.api.controller.ControllerBuilder
+import !dev.isxander.yacl3.api.controller.BooleanControllerBuilder
+import !dev.isxander.yacl3.api.controller.EnumControllerBuilder
+import !dev.isxander.yacl3.api.ButtonOption
+import !dev.isxander.yacl3.api.ButtonOption$Builder
 
 class YetAnotherConfigLib
-    static YetAnotherConfigLib$Builder createBuilder/createBuilder()
-    @Nullable Screen generateScreen/generateScreen(Screen parent)
-
-class YetAnotherConfigLib$Builder
-    YetAnotherConfigLib$Builder title/title(Component title)
-    YetAnotherConfigLib$Builder category/category(ConfigCategory category)
-    YetAnotherConfigLib build/build()
+    static YetAnotherConfigLib$Builder createBuilder()
+    Screen generateScreen(Screen parent)
+    class YetAnotherConfigLib$Builder
+        YetAnotherConfigLib$Builder title(Component title)
+        YetAnotherConfigLib$Builder category(ConfigCategory category)
+        YetAnotherConfigLib build()
 
 class ConfigCategory
-    static ConfigCategory$Builder createBuilder/createBuilder()
-
-class ConfigCategory$Builder
-    ConfigCategory$Builder name/name(Component name)
-    ConfigCategory$Builder option/option(Option option)
-    ConfigCategory build/build()
+    static ConfigCategory$Builder createBuilder()
+    class ConfigCategory$Builder
+        ConfigCategory$Builder name(Component name)
+        ConfigCategory$Builder option(Option option)
+        ConfigCategory build()
 
 class Option
-    static Option$Builder createBuilder/createBuilder()
+    static Option$Builder createBuilder()
+    class Option$Builder
+        Option$Builder name(Component name)
+        Option$Builder description(OptionDescription description)
+        Option$Builder binding(Object defaultValue, Supplier getter, Consumer setter)
+        Option$Builder controller(Function<Option, ControllerBuilder> controllerFactory)
+        Option build()
 
-class Option$Builder
-    Option$Builder name/name(Component name)
-    Option$Builder description/description(OptionDescription description)
-    Option$Builder binding/binding(Object defaultValue, Supplier getter, Consumer setter)
-    Option$Builder controller/controller(Function factory)
-    Option build/build()
-
-class ButtonOption
-    static ButtonOption$Builder createBuilder/createBuilder()
-
-class ButtonOption$Builder
-    ButtonOption$Builder name/name(Component name)
-    ButtonOption$Builder description/description(OptionDescription description)
-    ButtonOption$Builder action/action(BiConsumer action)
-    ButtonOption build/build()
+class ButtonOption extends Option
+    # forced to make a method alias due to clashes with 'Option'
+    static ButtonOption$Builder createBuilder/createButtonBuilder()
+    class ButtonOption$Builder
+        ButtonOption$Builder name(Component name)
+        ButtonOption$Builder description(OptionDescription description)
+        ButtonOption$Builder action(BiConsumer<Screen, ButtonOption> action)
+        ButtonOption build()
 
 class OptionDescription
-    static OptionDescription of/of(Component[] texts)
+    static OptionDescription of(Component[] lines)
 
-class BooleanControllerBuilder
-    static BooleanControllerBuilder create/create(Option option)
-    BooleanControllerBuilder coloured/coloured(boolean coloured)
+class ControllerBuilder
 
-class EnumControllerBuilder
-    static EnumControllerBuilder create/create(Option option)
-    EnumControllerBuilder enumClass/enumClass(Class enumClass)
+class BooleanControllerBuilder extends ControllerBuilder
+    BooleanControllerBuilder coloured(boolean coloured)
+    static BooleanControllerBuilder create(Option option)
 
-# ── ModMenu ─────────────────────────────────────────────────
-import com.terraformersmc.modmenu.api.ModMenuApi
-import com.terraformersmc.modmenu.api.ConfigScreenFactory
+class EnumControllerBuilder extends ControllerBuilder
+    EnumControllerBuilder enumClass(Class enumClass)
+    static EnumControllerBuilder create(Option option)
+
+# --------------------
+# Xaero
+# --------------------
+import !xaero.hud.packet.basic.ClientboundRulesPacket
+import !xaero.hud.packet.basic.ClientboundRulesPacket$ClientHandler
+
+class ClientboundRulesPacket
+    <init>(boolean allowCaveModeOnServer, boolean allowNetherCaveModeOnServer, boolean allowRadarOnServer)
+
+    class ClientboundRulesPacket$ClientHandler
+        void accept(ClientboundRulesPacket packet)
