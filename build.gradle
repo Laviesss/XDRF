@@ -1,48 +1,81 @@
 plugins {
-    id "net.fabricmc.fabric-loom" version '1.17.16'
-    id 'dev.gxlg.versiont-toolchain' version '1.3.9'
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 }
 
-version = '3.1.0 Universal+1.21-26.2'
-group = 'com.laviesss'
-
-base {
-    archivesName = "XaeroDisabledRadarFixer"
+repositories {
+	// Loom adds essential maven repositories automatically.
 }
 
-repositories { }
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"equipment_rebalance" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
 
 dependencies {
-    minecraft "com.mojang:minecraft:26.2"
-    implementation "net.fabricmc:fabric-loader:0.19.3"
-    implementation "net.fabricmc.fabric-api:fabric-api:0.155.2+26.2"
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 
 processResources {
-    inputs.property("version", project.version)
-    filesMatching("fabric.mod.json") {
-        expand(version: inputs.properties.version)
-    }
+	def version = project.mod_version
+	inputs.property "version", version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": version
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
-    options.release.set(21)
+	it.options.release = 25
 }
 
 java {
-    withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
-    inputs.property("archivesName", project.base.archivesName)
-    from("LICENSE") {
-        rename { "${it}_${inputs.properties.archivesName}" }
-    }
+	inputs.property "projectName", project.name
+
+	from("LICENSE") {
+		rename { "${it}_${project.name}" }
+	}
 }
 
-versiont {
-    mapping = file("src/main/resources/versiont.mapping")
+// ---------------------------------------------------------------------------
+// API introspection task (development tool, part of CI dump; safe to ignore).
+// Writes the resolved compile classpath of both source sets and the current
+// build info into build/api-classpath.txt so that CI can then run javap on
+// the Mojang-mapped vanilla + remapped Fabric API jars to validate mixin
+// targets against Minecraft 26.3.
+// ---------------------------------------------------------------------------
+def outDir = layout.buildDirectory.dir("api-dump").get()
+
+tasks.register("printClasspath", DefaultTask) {
+	group = "documentation"
+	description = "Dumps resolved compile classpath for CI javap dumps."
+	doLast {
+		def p = outDir.file("api-classpath.txt").getAsFile().get()
+		outDir.getAsFile().get().mkdirs()
+		def sb = new StringBuilder()
+		["compileClasspath", "clientCompileClasspath"].each { name ->
+			def c = project.configurations.getAsMap().get(name)
+			if (c == null || !c.isCanBeResolved()) {
+				sb.append("# configuration not resolvable: ").append(name).append('\n')
+				return
+			}
+			c.resolvedConfiguration.resolvedArtifacts.each { a ->
+				sb.append(a.file).append('\n')
+			}
+		}
+		p.text = sb.toString()
+		println "Classpath dumped to ${p}"
+	}
 }
