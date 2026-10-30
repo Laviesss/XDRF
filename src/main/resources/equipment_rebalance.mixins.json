@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "dev.diwer.equipment_rebalance.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"minVersion": "0.8",
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"refmap": "equipment_rebalance.refmap.json",
+	"mixins": [
+	],
+	"server": [
+	]
+}

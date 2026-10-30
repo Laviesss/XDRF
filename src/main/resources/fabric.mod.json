@@ -1,37 +1,36 @@
 {
-    "schemaVersion": 1,
-    "id": "xaerodisabledradarfixer",
-    "version": "${version}",
-
-    "name": "Xaero Disabled Radar Fixer",
-    "description": "Blocks server-side attempts to silently disable the radar in Xaero's Minimap and World Map.",
-    "authors": ["Laviesss"],
-
-    "contact": {
-        "homepage": "https://github.com/Laviesss/XDRF",
-        "sources": "https://github.com/Laviesss/XDRF"
-    },
-
-    "license": "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)",
-    "environment": "client",
-
-    "entrypoints": {
-        "client": ["com.laviesss.xaerodisabledradarfixer.XaeroDisabledRadarFixer"],
-        "modmenu": [
-          {
-            "adapter": "versiont+modmenu",
-            "value": "com.laviesss.xaerodisabledradarfixer.ModMenuEntrypoint"
-          }
-        ]
-    },
-
-    "mixins": ["mixins.xaerodisabledradarfixer.json"],
-
-    "depends": {
-        "fabricloader": ">=0.15.0",
-        "minecraft": ">=1.21 <=26.2",
-        "modmenu": "*",
-        "yet_another_config_lib_v3": ">=3.6.2",
-        "versiont": "~1.3.2"
-    }
+	"schemaVersion": 1,
+	"id": "equipment_rebalance",
+	"version": "${version}",
+	"name": "Equipment Rebalance",
+	"description": "Experimental vanilla-style rebalance of equipment and enchantments. Enchantment potential is determined by the material, not by base stats. Includes slot/capacity economy, XP-based repair through the enchanting table and normalized equipment stats. Everything is configurable.",
+	"authors": [
+		"diwer"
+	],
+	"contact": {
+		"sources": "https://github.com/diwersatorundo/equipment-rebalance"
+	},
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.diwer.equipment_rebalance.EquipmentRebalance"
+		],
+		"client": [
+			"dev.diwer.equipment_rebalance.client.EquipmentRebalanceClient"
+		]
+	},
+	"mixins": [
+		"equipment_rebalance.mixins.json",
+		{
+			"config": "equipment_rebalance.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.20.1",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
 }
